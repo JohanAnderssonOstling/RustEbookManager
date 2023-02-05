@@ -6,8 +6,11 @@ ColumnLayout{
 	property bool showAddButton: false
 	property bool showBackButton: true
 
-	property int bookID;
-	property int row;
+    property string readerUrl
+	property string bookUrl
+	property string epubCfi
+
+	property string bookUUID;
 
 	property string title
 	function backButtonPressed(){
