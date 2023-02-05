@@ -39,9 +39,7 @@ Window {
 			Layout.fillWidth: true
 			Layout.fillHeight: true
 
-            LibraryView{
-				id: libraryView
-			}
+
 			HomeView{
 				id: homeView
 			}

@@ -3,17 +3,21 @@
 
 #include <QAbstractListModel>
 #include <QHash>
+#include <QQmlApplicationEngine>
+#include "rust/cxx.h"
+#include "client_lib/src/lib.rs.h"
 
 class HomeModel : public QAbstractListModel {
 	Q_OBJECT
 private:
-	
+	rust::Vec<Library> libraryList;
 public:
 	enum Roles {
 		UuidRole = Qt::UserRole,
 		NameRole,
+		PathRole,
 	};
-	explicit HomeModel(QObject *parent = 0);
+	explicit HomeModel(QObject *parent = 0, QQmlApplicationEngine *engine = nullptr);
 
 	void updateLibraryList();
 	int rowCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -21,7 +25,8 @@ public:
 	QHash<int, QByteArray> roleNames() const override;
 
 public slots:
-	void addLibrary(QString name);
+	void addLibrary(const QString& name);
+	void openLibrary(int row);
 	void deleteLibrary(int row);
 
 };

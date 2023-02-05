@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs
 
 
 ColumnLayout {
@@ -13,14 +14,17 @@ ColumnLayout {
 		createLibraryDialog.open();
 		homeGrid.focus = true
 	}
-	Dialog{
-		id: createLibraryDialog
-		standardButtons: Dialog.Ok | Dialog.Cancel
-		TextField{
-			id: newLibraryName
-		}
-		onAccepted: HomeModel.addLibrary(newLibraryName.text)
-	}
+
+	FolderDialog{
+    	id: createLibraryDialog
+    	title: "Select folder"
+    	currentFolder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
+    	onAccepted: {
+    		console.log(createLibraryDialog.selectedFolder)
+
+    		HomeModel.addLibrary(createLibraryDialog.selectedFolder)
+        }
+    }
 
 	GridView {
 		id: homeGrid
@@ -29,37 +33,15 @@ ColumnLayout {
 		cellWidth: 260
 		cellHeight: 330
 		focus: true
+		clip: true
 		activeFocusOnTab: true
 		model: HomeModel
 		highlight: Rectangle { color: "lightblue" }
 		delegate:
-				Column{
-			Rectangle{
-				anchors.horizontalCenter: parent.horizontalCenter
-				width: 200
-				height: 300
-				color: "lightblue"
-				MouseArea{
-					anchors.fill: parent
-					acceptedButtons: Qt.LeftButton | Qt.RightButton
-					onClicked: {
-						if (mouse.button & Qt.LeftButton){
-							var library = HomeModel.getLibrary(model.index);
-							LibraryModel.setLibrary(library)
-							stackView.push(libraryView)
-						}
-						else if (mouse.button & Qt.RightButton){
-							HomeModel.deleteLibrary(model.index);
-						}
-					}
-				}
+			HomeViewDelegate{
+
 			}
-			Label{
-				anchors.horizontalCenter: parent.horizontalCenter
-				elide: Text.ElideRight
-				text: model.name
-			}
-		}
+
 		Keys.onDeletePressed:{
 			HomeModel.deleteLibrary(homeGrid.currentIndex)
 		}
