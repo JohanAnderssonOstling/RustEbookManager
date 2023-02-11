@@ -1,15 +1,9 @@
-use std::borrow::Borrow;
-use std::sync::RwLock;
-use lazy_static::lazy_static;
-use walkdir::WalkDir;
-use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 use library_db::LibraryDB;
 use crate::constant;
 use crate::db::library_db;
-use crate::ffi::Library;
 use crate::library_model::ffi::{Book, Folder};
 use crate::parser::epubparser::parse_epub;
 

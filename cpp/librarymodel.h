@@ -62,6 +62,8 @@ public slots:
 
 
 	void setCoverWidthIndex(int coverWidthIndex);
+
+	void setBookLocation(QString bookUUID, QString location);
 };
 
 

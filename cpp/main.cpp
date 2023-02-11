@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
     QGuiApplication app(argc, argv);
     
-    	//QtWebView::initialize();
+    	QtWebView::initialize();
 
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     }
 
     QQmlApplicationEngine engine;
-    const QUrl url("/home/johandost/CLionProjects/RustEbookManager/qml/main.qml");
+    const QUrl url("/home/johandost/Hem/Programmering/Clion/RustEbookManager/qml/main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
