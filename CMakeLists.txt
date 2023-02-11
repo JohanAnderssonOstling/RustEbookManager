@@ -24,6 +24,7 @@ set(RUST_BRIDGE_HEADER ${H_DIR}/rust_bridge.h)
 find_package(Qt6Core REQUIRED)
 find_package(Qt6Widgets REQUIRED)
 find_package(WrapOpenGL REQUIRED)
+find_package(Qt6WebView REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Gui)
 qt_standard_project_setup()
 find_package(Qt6Quick REQUIRED)
@@ -55,6 +56,7 @@ target_link_libraries(EbookTest
         crypto
     Qt6::Core
     Qt6::Widgets
+        Qt6::WebView
     PUBLIC client_lib)
 
 #install(TARGETS EbookTest BUNDLE DESTINATION .)
