@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+</head>
+<body scroll="no" style="overflow:hidden">
+
+<div id="area"></div>
+<script type="text/javascript">
+	var book;
+	var rendition;
+	const params = new URLSearchParams(document.location.search);
+	var bookUrl = params.get("bookUrl");
+	bookUrl = "https://s3.amazonaws.com/epubjs/books/alice/OPS/package.opf";
+	var initEpubCfi = params.get("epubCfi");
+    book = ePub(bookUrl);
+	rendition = book.renderTo("area");
+	rendition.display();
+	book.ready.then(function(){
+		var keyListener = function(e){
+			if ((e.keyCode || e.which) == 37) book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
+			else if ((e.keyCode || e.which) == 39) book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
+		};
+
+		rendition.on("keydown", keyListener);
+		document.addEventListener("keydown", keyListener, true);
+	})
+
+	function get_cfi(epubCfi){
+		return epubCfi
+	}
+</script>
+</body>
+</html>

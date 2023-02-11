@@ -27,21 +27,31 @@ Column{
             }
         }
 
-            }
+    }
 	Image{
         id: image
          visible: hasCover
         source: "file://" + cover
         asynchronous: true
         MouseArea{
-        anchors.fill: parent
+            anchors.fill: parent
             onClicked:{
+               var epubReaderComponent = Qt.createComponent("EpubReader.qml");
+               if (epubReaderComponent.status == Component.Ready){
+                   var epubReader = epubReaderComponent.createObject(parent);
+                   epubReader.readerUrl = "file://" + "/home/johandost/CLionProjects/RustEbookManager/web/epubreader.html";
+                   epubReader.bookUrl = "file://" + "/home/johandost/Hem/Documents/Böcker/Star Trek - Abramsverse/Star Trek_ Abramsverse - 02 - Into Darkness - Alan Dean Foster.epub";
+                   console.log("Pushing epubReader");
+                   stackView.push(epubReader);
+               }
+               else
+                   console.log("error loading component");
 
             }
         }
 
+}
 
-    }
 
 
 	Text{

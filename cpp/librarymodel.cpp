@@ -70,7 +70,7 @@ void LibraryModel::openLibrary(const QString& uuid, QString url_path) {
 	rust::String rust_uuid = rust::String(uuid.toStdString());
 	rust::String rust_path = rust::String(path.toStdString());
 	libraryDBModel = open_library(rust_uuid, rust_path);
-	libraryDBModel.at(0).scan_library(rust_path, 0);
+	//libraryDBModel.at(0).scan_library(rust_path, 0);
 	this->changeFolder(0);
 }
 
@@ -100,5 +100,11 @@ void LibraryModel::setCoverWidthIndex(int coverWidthIndex){
 
 int LibraryModel::getCoverWidth() const{
 	return coverWidths.at(coverWidthIndex);
+}
+
+void LibraryModel::setBookLocation(QString bookUUID, QString location){
+	rust::String rust_uuid = rust::String(bookUUID.toStdString());
+	rust::String rust_location = rust::String(location.toStdString());
+	libraryDBModel.at(0).set_book_location(rust_uuid, rust_location);
 }
 

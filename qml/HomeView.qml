@@ -33,14 +33,12 @@ ColumnLayout {
 		cellWidth: 260
 		cellHeight: 330
 		focus: true
-		clip: true
+		clip: trueL
 		activeFocusOnTab: true
 		model: HomeModel
 		highlight: Rectangle { color: "lightblue" }
 		delegate:
-			HomeViewDelegate{
-
-			}
+			HomeViewDelegate{}
 
 		Keys.onDeletePressed:{
 			HomeModel.deleteLibrary(homeGrid.currentIndex)
