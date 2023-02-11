@@ -14,7 +14,7 @@ ColumnLayout{
 
 	property string title
 	function backButtonPressed(){
-		epubWebView.runJavaScript("getEpubCfi();", function(epubCfi){
+		epubWebView.runJavaScript("get_cfi();", function(epubCfi){
 					LibraryModel.setBookLocation(epubCfi, row);
 				});
 		stackView.pop();
@@ -40,14 +40,16 @@ ColumnLayout{
 					});
 		}
 
+
 		id:epubWebView
-		width: parent.width
-		height: parent.height
+		anchors.fill: parent
+		//url: readerUrl + "?bookUrl=" + bookUrl + "&epubCfi=" + epubCfi
+
 		Keys.onRightPressed: epubWebView.runJavaScript("nextPage();", function(location){
-			LibraryModel.setBookLocation(location, row);
+			LibraryModel.setBookLocation(bookUUID, location);
 		});
 		Keys.onLeftPressed: epubWebView.runJavaScript("prevPage()", function(location){
-			LibraryModel.setBookLocation(location, row);
+			LibraryModel.setBookLocation(bookUUID, location);
 		});
 
 		}
