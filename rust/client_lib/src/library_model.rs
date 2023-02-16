@@ -62,9 +62,11 @@ impl LibraryDBModel {
                 dirs.push(create_folder(path, parent_folder_id));
             } else {
                 let thumb_dir = create_thumb_dir(&self.uuid);
-                let mut book = parse_book(path.to_str().unwrap(), &thumb_dir);
+                let x = thumb_dir.clone();
+                let mut book = parse_book(path.to_str().unwrap(), thumb_dir);
                 book.folder_id = parent_folder_id;
-                //self.create_thumbnails(thumb_dir.join(&book.uuid));
+
+                self.create_thumbnails(x.join(&book.uuid));
                 books.push(book);
             }
         }
@@ -77,7 +79,13 @@ impl LibraryDBModel {
     pub fn create_thumbnails(&self, thumbnail_folder: PathBuf){
         let orig_img_path = thumbnail_folder.clone().join("orig.jpg");
         println!("Creating thumbnails for {}", orig_img_path.to_str().unwrap());
-        let orig_img = image::open(orig_img_path).unwrap();
+        let orig_img = match image::open(orig_img_path){
+            Ok(img) => img,
+            Err(err) => {
+                println!("Error opening image: {}", err);
+                return;
+            }
+        };
         for cover_width in COVER_WIDTHS.iter() {
             let save_path = thumbnail_folder.clone().join(format!("{}.jpg", cover_width));
             let thumbnail = orig_img.thumbnail(*cover_width, ((*cover_width as f32 * MAX_HEIGHT_RATION) as u32));
