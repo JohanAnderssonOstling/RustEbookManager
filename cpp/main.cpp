@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     }
 
     QQmlApplicationEngine engine;
-    const QUrl url("/home/johandost/Hem/Programmering/Clion/RustEbookManager/qml/main.qml");
+    const QUrl url("../qml/main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
