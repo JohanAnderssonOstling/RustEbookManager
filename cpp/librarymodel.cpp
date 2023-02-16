@@ -37,7 +37,7 @@ QVariant LibraryModel::bookData(int row, int role) const{
 		case PathRole: return QString::fromStdString(std::string((bookList.at(row).path)));
 		case AuthorRole: return "Placeholder";
 		case LocationRole: return QString::fromStdString(std::string((bookList.at(row).read_location)));
-		case HasCoverRole: return false;
+		case HasCoverRole: return true;
 		case CoverRole: return getCoverPath(row);
 		default: return {};
 	}
