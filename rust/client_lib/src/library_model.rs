@@ -4,8 +4,9 @@ use std::sync::Mutex;
 use library_db::LibraryDB;
 use crate::constant;
 use crate::db::library_db;
-use crate::library_model::ffi::{Book, Folder};
+use crate::library_model::ffi::{Book, Dir};
 use crate::parser::epubparser::parse_epub;
+use crate::parser::parse_book;
 
 pub struct LibraryDBModel {
     pub uuid: String,
@@ -17,21 +18,40 @@ pub const COVER_WIDTHS: [u32; 4] = [64,128,256,512];
 pub const MAX_HEIGHT_RATION: f32 = 1.6;
 
 pub fn open_library(uuid: &str, path: &str) -> Vec<LibraryDBModel> {
-    let library_dir = constant::DATA_DIR.join(uuid);
-    fs::create_dir_all(library_dir).unwrap();
+
     let library = LibraryDBModel {
         uuid: String::from(uuid),
         path: String::from(path),
         db_conn: Mutex::new(LibraryDB::open(uuid)),
     };
-    vec![library]
+    vec![library] //Return vec for C++ compatibility
 }
 
+fn create_thumb_dir(uuid: &str) -> PathBuf{
+    let thumb_dir = constant::DATA_DIR.join(uuid).join("thumb");
+    fs::create_dir_all(&thumb_dir).unwrap();
+    thumb_dir
+}
 
 impl LibraryDBModel {
-    pub fn scan_library(&self, path: &str, parent_folder_id: u32) {
+    fn add_folder_contents_to_db(&self, folders: &Vec<Dir>, books: &Vec<Book>, parent_folder_id: u32) -> Vec<Dir>{
+        let db_conn = self.db_conn.lock().unwrap();
+        db_conn.add_folders(&folders);
+        let add_result = match db_conn.add_books(&books){
+            Ok(result) => result,
+            Err(err) => {
+                println!("Error adding books: {}", err);
+                0
+            }
+        };
+        db_conn.get_folders(parent_folder_id)
+    }
+    pub fn scan_library(&self){
+        self.scan_library_aux(&self.path, 0);
+    }
+    fn scan_library_aux(&self, path: &str, parent_folder_id: u32) {
 
-        let mut folders: Vec<Folder> = Vec::new();
+        let mut dirs: Vec<Dir> = Vec::new();
         let mut books: Vec<Book> = Vec::new();
         println!("Scanning {}", path);
         for file in fs::read_dir(path).unwrap() {
@@ -39,31 +59,20 @@ impl LibraryDBModel {
             let path_buf = file.path();
             let path = path_buf.as_path();
             if file.path().is_dir() {
-                folders.push(create_folder(path, parent_folder_id));
+                dirs.push(create_folder(path, parent_folder_id));
             } else {
-                let thumb_dir = constant::DATA_DIR.join(&self.uuid).join("thumb");
-                fs::create_dir_all(&thumb_dir).unwrap();
-                let mut book = parse_epub(path.to_str().unwrap(), &thumb_dir);
+                let thumb_dir = create_thumb_dir(&self.uuid);
+                let mut book = parse_book(path.to_str().unwrap());
                 book.folder_id = parent_folder_id;
-                self.create_thumbnails(thumb_dir.join(&book.uuid));
+                //self.create_thumbnails(thumb_dir.join(&book.uuid));
                 books.push(book);
-
             }
         }
-        {
-            let db_conn = self.db_conn.lock().unwrap();
-            db_conn.add_folders(&folders);
-            let add_result = match db_conn.add_books(&books){
-                Ok(result) => result,
-                Err(err) => {
-                    println!("Error adding books: {}", err);
-                    0
-                }
-            };
-            folders = db_conn.get_folders(parent_folder_id);
-        }
-        folders.iter().map(|folder|
-                self.scan_library(&*format!("{}/{}", path, folder.name), folder.id)).collect()
+        //Add folders and books to db and get the folders with ids
+        dirs = self.add_folder_contents_to_db(&dirs, &books, parent_folder_id);
+        //Iterate over the found fol
+        dirs.iter().map(|folder|
+                self.scan_library_aux(&*format!("{}/{}", path, folder.name), folder.id)).collect()
     }
     pub fn create_thumbnails(&self, thumbnail_folder: PathBuf){
         let orig_img_path = thumbnail_folder.clone().join("orig.jpg");
@@ -79,7 +88,7 @@ impl LibraryDBModel {
         let db_conn = self.db_conn.lock().unwrap();
         db_conn.get_books_by_folder(folder_id)
     }
-    pub fn get_folders(&self, parent_id: u32) -> Vec<Folder> {
+    pub fn get_folders(&self, parent_id: u32) -> Vec<Dir> {
         let db_conn = self.db_conn.lock().unwrap();
         db_conn.get_folders(parent_id)
     }
@@ -87,10 +96,14 @@ impl LibraryDBModel {
         let cover_path = constant::DATA_DIR.join(&self.uuid).join("thumb").join(book_uuid);
         cover_path.to_str().unwrap().to_string()
     }
+    pub fn close(&self){
+        let db_conn = self.db_conn.lock().unwrap();
+        db_conn.close();
+    }
 }
 
-pub fn create_folder(path: &Path, folder_id: u32) -> Folder {
-    let folder = Folder {
+pub fn create_folder(path: &Path, folder_id: u32) -> Dir {
+    let folder = Dir {
         name: String::from(path.file_name().unwrap().to_str().unwrap()),
         parent_id: folder_id,
         id: 0,
@@ -103,7 +116,7 @@ pub fn get_cover_widths() -> Vec<u32> {
 
 #[cxx::bridge]
 pub mod ffi {
-    #[derive(Default)]
+    #[derive(Default, Clone)]
     pub struct Book {
         pub uuid: String,
         pub name: String,
@@ -115,7 +128,7 @@ pub mod ffi {
         pub folder_id: u32,
     }
 
-    pub struct Folder {
+    pub struct Dir {
         pub id: u32,
         pub name: String,
         pub parent_id: u32,
@@ -124,9 +137,9 @@ pub mod ffi {
     extern "Rust" {
         type LibraryDBModel;
         fn open_library(uuid: &str, path: &str) -> Vec<LibraryDBModel>;
-        fn scan_library(&self, path: &str, parent_folder_id: u32);
+        fn scan_library(&self);
         fn get_books(&self, folder_id: u32) -> Vec<Book>;
-        fn get_folders(&self, parent_id: u32) -> Vec<Folder>;
+        fn get_folders(&self, parent_id: u32) -> Vec<Dir>;
         fn get_cover_path(&self, book_uuid: &str) -> String;
 
         pub fn get_cover_widths() -> Vec<u32>;

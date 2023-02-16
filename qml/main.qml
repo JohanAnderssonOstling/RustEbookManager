@@ -34,24 +34,15 @@ Window {
 				}
 			}
 		}
-		StackView{
-			id: stackView
-			Layout.fillWidth: true
-			Layout.fillHeight: true
-
-
-			HomeView{
-				id: homeView
-			}
-			EpubReader{
-				id: epubReader
-			}
-
-			initialItem: homeView
-			focus: false
-			
-			
-			
+	StackView{
+		id: stackView
+		Layout.fillWidth: true
+		Layout.fillHeight: true
+		HomeView{id: homeView}
+		EpubReader{id: epubReader}
+		initialItem: homeView
 		}
+
 	}
+
 }

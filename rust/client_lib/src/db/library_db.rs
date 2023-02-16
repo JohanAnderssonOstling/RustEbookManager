@@ -86,8 +86,8 @@ impl LibraryDB {
             folder_id: row.get(7).unwrap(),
         }
     }
-    pub fn row_to_folder(row: &rusqlite::Row) -> Folder {
-        Folder {
+    pub fn row_to_folder(row: &rusqlite::Row) -> Dir {
+        Dir {
             id: row.get(0).unwrap(),
             name: row.get(1).unwrap(),
             parent_id: row.get(2).unwrap(),
@@ -104,20 +104,20 @@ impl LibraryDB {
 
 //Folderqueries
 
-    pub fn add_folder(&self, folder: &Folder) {
+    pub fn add_folder(&self, folder: &Dir) {
         let query = "INSERT INTO FOLDER (name, parent_folder_id) VALUES (?, ?)";
         let mut stmt = self.connection.prepare(query).unwrap();
         stmt.execute(params![folder.name, folder.parent_id]).unwrap();
     }
 
-    pub fn add_folders(&self, folders: &Vec<Folder>) {
+    pub fn add_folders(&self, folders: &Vec<Dir>) {
         for folder in folders {
             self.add_folder(folder);
         }
     }
 
 
-    pub fn get_folders(&self, parent_id: u32) -> Vec<Folder> {
+    pub fn get_folders(&self, parent_id: u32) -> Vec<Dir> {
         let query = "SELECT * FROM FOLDER WHERE parent_folder_id = ?";
         self.select(query, params![parent_id],LibraryDB::row_to_folder)
     }
@@ -130,5 +130,7 @@ impl LibraryDB {
         let query = "DELETE FROM FOLDER";
         self.connection.execute(query, []).unwrap();
     }
-
+    pub fn close(&self) {
+        //self.connection.close().unwrap();
+    }
 }

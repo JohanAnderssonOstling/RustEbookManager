@@ -2,7 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs
-
+import QtMultimedia
 
 ColumnLayout {
 
@@ -33,7 +33,7 @@ ColumnLayout {
 		cellWidth: 260
 		cellHeight: 330
 		focus: true
-		clip: trueL
+		clip: true
 		activeFocusOnTab: true
 		model: HomeModel
 		highlight: Rectangle { color: "lightblue" }
