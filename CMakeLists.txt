@@ -22,7 +22,7 @@ set(H_DIR ${CMAKE_SOURCE_DIR}/headers)
 set(RUST_BRIDGE_HEADER ${H_DIR}/rust_bridge.h)
 
 
-find_package(Qt6 COMPONENTS Core Gui Quick WebView QuickControls2 Multimedia Core5Compat Pdf REQUIRED)
+find_package(Qt6 COMPONENTS Core Gui Quick WebView QuickControls2 Pdf REQUIRED)
 find_package(Corrosion REQUIRED)
 
 include(corrosion_cxx.cmake)
@@ -36,6 +36,6 @@ qt_add_executable(EbookTest cpp/main.cpp cpp/homemodel.cpp cpp/librarymodel.cpp 
 add_library_rust(PATH rust/client_lib NAMESPACE my)
 target_link_libraries(EbookTest
         PUBLIC my::client_lib
-        PRIVATE Qt6::Quick Qt6::Core Qt6::WebView Qt6::Multimedia Qt6::Pdf Qt6::Core5Compat ssl)
+        PRIVATE Qt6::Quick Qt6::Core Qt6::WebView Qt6::Pdf ssl)
 
 
