@@ -3,6 +3,7 @@ import QtQuick.Pdf
 Rectangle{
     property bool showAddButton: false
     	property bool showBackButton: true
+    	property string title: "PDF Viewer"
     	function backButtonPressed(){
     	    stackView.pop();
     	}
