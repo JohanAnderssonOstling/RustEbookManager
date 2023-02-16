@@ -15,8 +15,6 @@ ColumnLayout{
         libraryModel.openLibrary(uuid, path)
 
 	}
-
-
     LibraryModel{
         id: libraryModel
     }

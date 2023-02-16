@@ -21,11 +21,20 @@ Column{
         height: column.coverHeight
 		color: "cornflowerblue"
 		MouseArea{
-		    anchors.fill: parent
-            onClicked:{
-                libraryGrid.model.changeFolder(id)
-            }
-        }
+                    anchors.fill: parent
+                    onClicked:{
+                        var pdfReaderComponent = Qt.createComponent("PDFReader.qml");
+                        if (pdfReaderComponent.status == Component.Ready){
+                            var pdfReader = pdfReaderComponent.createObject(parent);
+                            pdfReader.documentSource = "file://" + path
+
+                            console.log("Pushing pdfReader");
+                            stackView.push(pdfReader);
+                        }
+                        else
+                            console.log("error loading component");
+                    }
+                }
 
     }
 	Image{
@@ -36,17 +45,16 @@ Column{
         MouseArea{
             anchors.fill: parent
             onClicked:{
-               var epubReaderComponent = Qt.createComponent("EpubReader.qml");
-               if (epubReaderComponent.status == Component.Ready){
-                   var epubReader = epubReaderComponent.createObject(parent);
-                   epubReader.readerUrl = "file://" + "/home/johandost/CLionProjects/RustEbookManager/web/epubreader.html";
-                   epubReader.bookUrl = "file://" + "/home/johandost/Hem/Documents/Böcker/Star Trek - Abramsverse/Star Trek_ Abramsverse - 02 - Into Darkness - Alan Dean Foster.epub";
-                   console.log("Pushing epubReader");
-                   stackView.push(epubReader);
-               }
-               else
-                   console.log("error loading component");
+                var pdfReaderComponent = Qt.createComponent("PDFReader.qml");
+                if (pdfReaderComponent.status == Component.Ready){
+                    var pdfReader = pdfReaderComponent.createObject(parent);
+                    pdfReader.documentSource = "file://" + path
 
+                    console.log("Pushing pdfReader");
+                    stackView.push(pdfReader);
+                }
+                else
+                    console.log("error loading component");
             }
         }
 

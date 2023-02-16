@@ -15,7 +15,7 @@ class LibraryModel : public QAbstractListModel {
 	Q_PROPERTY(int coverWidthProp READ getCoverWidth NOTIFY coverWidthChanged)
 private:
 	rust::vec<Book> bookList;
-	rust::vec<Folder> folderList;
+	rust::vec<Dir> folderList;
 	rust::vec<uint32_t> coverWidths;
 	int coverWidthIndex = 2;
 	rust::vec<LibraryDBModel> libraryDBModel;

@@ -9,8 +9,6 @@ LibraryModel::LibraryModel(QObject *parent) : QAbstractListModel(parent){
 	coverWidths = get_cover_widths();
 }
 
-
-
 int LibraryModel::rowCount(const QModelIndex &parent) const{
 	if (parent.isValid()) return 0;
 	return this->folderList.size() + this->bookList.size();
@@ -39,7 +37,7 @@ QVariant LibraryModel::bookData(int row, int role) const{
 		case PathRole: return QString::fromStdString(std::string((bookList.at(row).path)));
 		case AuthorRole: return "Placeholder";
 		case LocationRole: return QString::fromStdString(std::string((bookList.at(row).read_location)));
-		case HasCoverRole: return true;
+		case HasCoverRole: return false;
 		case CoverRole: return getCoverPath(row);
 		default: return {};
 	}
@@ -70,7 +68,7 @@ void LibraryModel::openLibrary(const QString& uuid, QString url_path) {
 	rust::String rust_uuid = rust::String(uuid.toStdString());
 	rust::String rust_path = rust::String(path.toStdString());
 	libraryDBModel = open_library(rust_uuid, rust_path);
-	//libraryDBModel.at(0).scan_library(rust_path, 0);
+	libraryDBModel.at(0).scan_library();
 	this->changeFolder(0);
 }
 
@@ -105,6 +103,6 @@ int LibraryModel::getCoverWidth() const{
 void LibraryModel::setBookLocation(QString bookUUID, QString location){
 	rust::String rust_uuid = rust::String(bookUUID.toStdString());
 	rust::String rust_location = rust::String(location.toStdString());
-	libraryDBModel.at(0).set_book_location(rust_uuid, rust_location);
+	//libraryDBModel.at(0).set_book_location(rust_uuid, rust_location);
 }
 
