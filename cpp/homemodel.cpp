@@ -16,7 +16,10 @@ void HomeModel::addLibrary(const QString& path){
 
 }
 void HomeModel::deleteLibrary(int row) {
-
+	beginRemoveRows(QModelIndex(), row, row);
+	delete_library(libraryList.at(row).uuid);
+	updateLibraryList();
+	endRemoveRows();
 }
 
 void HomeModel::updateLibraryList() {
