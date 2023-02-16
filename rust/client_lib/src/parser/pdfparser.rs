@@ -4,7 +4,7 @@ use crate::library_model::ffi::Book;
 use pdf::file::File as PdfFile;
 use pdf::error::PdfError;
 use pdf::object::PdfObj;
-pub fn parse_pdf(book: Book) -> Book{
+pub fn parse_pdf(book: Book, thumb_dir: PathBuf) -> Book{
     book
 }
 
