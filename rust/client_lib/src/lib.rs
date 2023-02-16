@@ -31,11 +31,10 @@ pub fn add_library(name: &str, path: &str) -> Library{
     let library_dir = constant::DATA_DIR.join(&library.uuid);
     fs::create_dir_all(library_dir).unwrap();
 
-
     let library_model = library_model::open_library(&library.uuid, &library.path);
     library_model[0].scan_library();
 
-    library
+    return library
 }
 
 pub fn get_library_list() -> Vec<Library>{

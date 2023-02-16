@@ -20,7 +20,9 @@ Column{
                     }
 					stackView.push(libraryView);
 				}
-			}
+				else if(mouse.button & Qt.RightButton){
+				    HomeModel.deleteLibrary(model.uuid);
+			}}
 		}
 	}
 	Label{

@@ -68,7 +68,6 @@ void LibraryModel::openLibrary(const QString& uuid, QString url_path) {
 	rust::String rust_uuid = rust::String(uuid.toStdString());
 	rust::String rust_path = rust::String(path.toStdString());
 	libraryDBModel = open_library(rust_uuid, rust_path);
-	libraryDBModel.at(0).scan_library();
 	this->changeFolder(0);
 }
 
