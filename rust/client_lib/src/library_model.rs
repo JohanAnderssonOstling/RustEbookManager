@@ -62,7 +62,7 @@ impl LibraryDBModel {
                 dirs.push(create_folder(path, parent_folder_id));
             } else {
                 let thumb_dir = create_thumb_dir(&self.uuid);
-                let mut book = parse_book(path.to_str().unwrap(), &thumb_dir);
+                let mut book = parse_book(path.to_str().unwrap(), thumb_dir.clone());
                 book.folder_id = parent_folder_id;
                 //self.create_thumbnails(thumb_dir.join(&book.uuid));
                 books.push(book);
@@ -99,6 +99,14 @@ impl LibraryDBModel {
     pub fn close(&self){
         let db_conn = self.db_conn.lock().unwrap();
         db_conn.close();
+    }
+    pub fn set_book_location(&self, book_uuid: &str, location: &str, percentage: u32){
+        let db_conn = self.db_conn.lock().unwrap();
+        db_conn.set_book_location(book_uuid, location, percentage);
+    }
+    pub fn get_book_location(&self, book_uuid: &str) -> (String, u32){
+        let db_conn = self.db_conn.lock().unwrap();
+        db_conn.get_book_location(book_uuid)
     }
 }
 

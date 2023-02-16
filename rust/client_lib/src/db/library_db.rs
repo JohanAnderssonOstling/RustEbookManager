@@ -102,6 +102,22 @@ impl LibraryDB {
         let query = "DELETE FROM BOOK WHERE book_uuid = ?";
     }
 
+    pub fn set_book_location(&self, book_uuid: &str, location: &str, percentage: u32) {
+        let query = "UPDATE BOOK SET read_location = ?, read_percentage = ? WHERE book_uuid = ?";
+        let mut stmt = self.connection.prepare(query).unwrap();
+        stmt.execute(params![location, percentage, book_uuid]).unwrap();
+    }
+
+    pub fn get_book_location(&self, book_uuid: &str) -> (String, u32) {
+        let query = "SELECT read_location, read_percentage FROM BOOK WHERE book_uuid = ?";
+        let mut stmt = self.connection.prepare(query).unwrap();
+        let mut rows = stmt.query(params![book_uuid]).unwrap();
+        let row = rows.next().unwrap().unwrap();
+        let location: String = row.get(0).unwrap();
+        let percentage: u32 = row.get(1).unwrap();
+        (location, percentage)
+    }
+
 //Folderqueries
 
     pub fn add_folder(&self, folder: &Dir) {
@@ -115,7 +131,6 @@ impl LibraryDB {
             self.add_folder(folder);
         }
     }
-
 
     pub fn get_folders(&self, parent_id: u32) -> Vec<Dir> {
         let query = "SELECT * FROM FOLDER WHERE parent_folder_id = ?";

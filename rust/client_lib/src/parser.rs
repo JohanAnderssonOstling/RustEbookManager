@@ -1,6 +1,7 @@
 
 use uuid::Uuid;
 use crate::library_model::ffi::Book;
+use std::path::PathBuf;
 
 pub mod epubparser;
 mod pdfparser;
