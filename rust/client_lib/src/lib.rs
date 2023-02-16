@@ -25,10 +25,12 @@ lazy_static!{
 
 pub fn add_library(name: &str, path: &str) -> Library{
     let home_db = HOME_DB_CONN.lock().unwrap();
-    let library = home_db.add_library(name, path);
+    let local_path = path.replace("file://", "");
+    let library = home_db.add_library(name, local_path.as_str());
 
     let library_dir = constant::DATA_DIR.join(&library.uuid);
     fs::create_dir_all(library_dir).unwrap();
+
 
     let library_model = library_model::open_library(&library.uuid, &library.path);
     library_model[0].scan_library();
