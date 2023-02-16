@@ -1,4 +1,6 @@
-
+use std::fs;
+use std::io::Write;
+use std::path::PathBuf;
 use pdf::enc::StreamFilter;
 
 use crate::library_model::ffi::Book;
@@ -37,17 +39,24 @@ fn print_field(field: &FieldDictionary, resolve: &impl Resolve) {
 }
 
 
-pub fn parse_pdf(book: Book) -> Book{
-    get_cover(&book.path);
+pub fn parse_pdf(book: Book, thumb_dir : PathBuf) -> Book{
+    let result = get_cover(&book.path, thumb_dir);
+    let handled = match result{
+        Ok(_) => (),
+        Err(err) => println!("Error: {}", err),
+    };
+
     book
 }
 
-pub fn get_cover(pdf_path: &str){
-    let file = PdfFile::open(pdf_path).unwrap();
-    let first_page = file.get_page(0).unwrap();
-    let resources = first_page.resources().unwrap();
+pub fn get_cover(pdf_path: &str, thumb_dir: PathBuf) -> Result<(), PdfError> {
+    let file = PdfFile::open(pdf_path)?;
+    let first_page = file.get_page(0)?;
+    let resources = first_page.resources()?;
     let mut images: Vec<_> = vec![];
-    images.extend(resources.xobjects.iter().map(|(_name, &r)| file.get(r).unwrap())
+
+    images.extend(resources.xobjects.iter()
+        .map(|(_name, &r)| file.get(r).unwrap())
         .filter(|o| matches!(**o, XObject::Image(_)))
     );
 
@@ -56,7 +65,7 @@ pub fn get_cover(pdf_path: &str){
             XObject::Image(ref im) => im,
             _ => continue
         };
-        let (data, filter) = img.raw_image_data(&file).unwrap();
+        let (data, filter) = img.raw_image_data(&file)?;
         let ext = match filter {
             Some(StreamFilter::DCTDecode(_)) => "jpeg",
             Some(StreamFilter::JBIG2Decode) => "jbig2",
@@ -65,8 +74,13 @@ pub fn get_cover(pdf_path: &str){
         };
 
         let fname = format!("extracted_image_{}.{}", i, ext);
-
+        let cover_path = thumb_dir.join("orig.jpg");
+        let outputpath = cover_path.to_str().unwrap();
+        println!("Writing cover_path: {}" , outputpath);
+        let mut file = fs::File::create(cover_path).unwrap();
+        file.write_all(&*data).unwrap();
         println!("Wrote file {}", fname);
     }
+    Ok(())
 
 }
