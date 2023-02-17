@@ -14,6 +14,7 @@ Window {
 		ToolBar{
 			Layout.alignment: Qt.AlignTop
 			Layout.fillWidth: true
+			focus: false
 			RowLayout{
 				anchors.fill: parent
 				ToolButton{
