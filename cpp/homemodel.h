@@ -17,12 +17,14 @@ public:
 		NameRole,
 		PathRole,
 	};
-	explicit HomeModel(QObject *parent = 0, QQmlApplicationEngine *engine = nullptr);
 
+	explicit HomeModel(QObject *parent = 0, QQmlApplicationEngine *engine = nullptr);
 	void updateLibraryList();
 	int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 	QVariant data(const QModelIndex &index, int role) const override;
 	QHash<int, QByteArray> roleNames() const override;
+
+
 
 public slots:
 	void addLibrary(const QString& name);

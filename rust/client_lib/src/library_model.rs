@@ -21,7 +21,6 @@ pub const COVER_WIDTHS: [u32; 4] = [64, 128, 256, 512];
 pub const MAX_HEIGHT_RATION: f32 = 1.6;
 
 pub fn open_library(uuid: &str, path: &str) -> Vec<LibraryDBModel> {
-	println!("Opening library: {}", uuid);
 	let library = LibraryDBModel {
 		uuid: String::from(uuid),
 		path: String::from(path),
