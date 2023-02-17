@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(RustEbookManger VERSION 0.1 LANGUAGES CXX)
 set(HOME_DIR $ENV{HOME})
-set(CMAKE_PREFIX_PATH "${HOME_DIR}/.config/Qt-dev/6.4.2/gcc_64/lib/cmake")
+#set(CMAKE_PREFIX_PATH "${HOME_DIR}/.config/Qt-dev/6.4.2/gcc_64/lib/cmake")
 #set(CMAKE_PREFIX_PATH "/home/johandost/Qt/5.15.2/gcc_64/lib/cmake")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -24,7 +24,7 @@ set(RUST_BRIDGE_HEADER ${H_DIR}/rust_bridge.h)
 set(ENV{RUST_BACKTRACE} 1)
 
 
-find_package(Qt6 COMPONENTS Core Gui Quick WebView QuickControls2 Pdf REQUIRED)
+find_package(Qt6 COMPONENTS Core Gui Quick QuickControls2 REQUIRED)
 find_package(Corrosion REQUIRED)
 
 include(corrosion_cxx.cmake)
@@ -38,4 +38,4 @@ qt_add_executable(EbookTest cpp/main.cpp cpp/homemodel.cpp cpp/librarymodel.cpp 
 add_library_rust(PATH rust/client_lib NAMESPACE my)
 target_link_libraries(EbookTest
         PUBLIC my::client_lib
-        PRIVATE Qt6::Quick Qt6::Core Qt6::WebView Qt6::Pdf ssl)
+        PRIVATE Qt6::Quick Qt6::Core ssl)
