@@ -46,7 +46,7 @@ public:
 	int getCoverWidth() const;
 
 public slots:
-	void openLibrary(const QString& uuid, QString path);
+	void openLibrary(const QString& uuid, const QString& path);
 	[[nodiscard]] QVariant bookData(int row, int role) const;
 	QVariant folderData(int row, int role) const;
 	void changeFolder(int folderID);
