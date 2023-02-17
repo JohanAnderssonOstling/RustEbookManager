@@ -38,5 +38,8 @@ To run the project, run:
 ```
 
 ## Features
+- Create a library by importing a directory of ebooks and pdfs.
+- Generates thumbnails for pdfs to be used as covers when browsing a library.
+- Read ebooks and pdfs in the library.
 
-### Design
+## Design
