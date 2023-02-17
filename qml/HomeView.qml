@@ -17,7 +17,6 @@ ColumnLayout {
 	FolderDialog{
     	id: createLibraryDialog
     	title: "Select folder"
-    	currentFolder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
     	onAccepted: {
     		console.log(createLibraryDialog.selectedFolder)
     		HomeModel.addLibrary(createLibraryDialog.selectedFolder)
