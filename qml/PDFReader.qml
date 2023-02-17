@@ -15,6 +15,7 @@ Rectangle{
     id :rect
     focus: true
     function init(init_read_location){
+        console.log("Setting book page to" + init_read_location);
         pdfPageView.goToPage(init_read_location);
     }
     PdfPageView {
@@ -26,6 +27,7 @@ Rectangle{
                 console.log("Page out of range: " + newPage)
                 return;
             }
+            console.log("Setting page to: " + newPage);
             var read_percentage = Math.round((newPage / pageCount) * 100);
             pdfPageView.goToPage(newPage);
             libraryModel.setBookLocation(uuid, newPage.toString(), read_percentage);
