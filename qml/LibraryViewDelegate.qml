@@ -4,15 +4,12 @@ import QtQuick.Layouts 1.3
 import Qt.labs.platform 1.1
 import johandost.LibraryModel 1.0
 
-
-
 Column{
     id: column
     property int coverWidth
     property int coverHeight
     width: parent.cellWidth
     height: parent.cellHeight
-
 
 	Rectangle{
 		id: coverPlaceHolder
@@ -27,12 +24,20 @@ Column{
                         if (pdfReaderComponent.status == Component.Ready){
                             var pdfReader = pdfReaderComponent.createObject(parent);
                             pdfReader.documentSource = "file://" + path
-
+                            console.log("Opening");
+                            pdfReader.title = name +" uuid: " +uuid + " location: " + location
+                            pdfReader.uuid = uuid
+                            pdfReader.init_read_location = location
+                            pdfReader.init(location);
+                             //pdfReader.model = model
                             console.log("Pushing pdfReader");
                             stackView.push(pdfReader);
                         }
-                        else
+                        else{
                             console.log("error loading component");
+                            console.log(pdfReaderComponent.errorString());
+                        }
+
                     }
                 }
 
@@ -49,9 +54,11 @@ Column{
                 if (pdfReaderComponent.status == Component.Ready){
                     var pdfReader = pdfReaderComponent.createObject(parent);
                     pdfReader.documentSource = "file://" + path
-
+                    pdfReader.model = model
                     console.log("Pushing pdfReader");
                     stackView.push(pdfReader);
+                    console.log("Pushed pdfReader");
+
                 }
                 else
                     console.log("error loading component");

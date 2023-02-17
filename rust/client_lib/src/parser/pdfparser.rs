@@ -5,6 +5,7 @@ use pdf::enc::StreamFilter;
 
 use crate::library_model::ffi::Book;
 use pdf::error::PdfError;
+
 use pdf::file::File as PdfFile;
 use pdf::object::*;
 
@@ -84,3 +85,4 @@ pub fn get_cover(pdf_path: &str, thumb_dir: PathBuf) -> Result<(), PdfError> {
     Ok(())
 
 }
+

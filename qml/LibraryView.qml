@@ -11,9 +11,7 @@ ColumnLayout{
 	property string library_uuid: ""
 
 	function initLibraryModel(uuid, path){
-
         libraryModel.openLibrary(uuid, path)
-
 	}
     LibraryModel{
         id: libraryModel
@@ -40,8 +38,6 @@ ColumnLayout{
 			LibraryModel.addBooks(newBooksDialog.files)
 		}
 	}
-
-
 	GridView{
         property int coverWidth : libraryModel.coverWidthProp
 		id: libraryGrid

@@ -2,6 +2,7 @@ use std::fs;
 use std::path::PathBuf;
 use uuid::Uuid;
 use crate::library_model::ffi::Book;
+use std::path::PathBuf;
 
 pub mod epubparser;
 mod pdfparser;
@@ -16,6 +17,7 @@ pub fn parse_book(path: &str, thumb_dir: PathBuf) -> Book{
         uuid,
         name: file_name,
         path: path.to_string(),
+        read_location: "0".to_string(),
         ..Default::default()
     };
     match file_extension.as_str() {
