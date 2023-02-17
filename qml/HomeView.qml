@@ -11,7 +11,6 @@ ColumnLayout {
 	property string title: "Home"
 	function addButtonPressed(){
 		createLibraryDialog.open();
-		homeGrid.focus = true
 	}
 
 	FolderDialog{

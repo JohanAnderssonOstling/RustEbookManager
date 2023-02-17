@@ -27,18 +27,14 @@ Column{
                     pdfReader.title = name +" uuid: " +uuid + " location: " + location
                     pdfReader.uuid = uuid
                     pdfReader.init_read_location = location
-                    pdfReader.init(location);
-                    //pdfReader.model = model
                     stackView.push(pdfReader);
                 }
                 else{
                     console.log("error loading component");
                     console.log(pdfReaderComponent.errorString());
                 }
-
             }
         }
-
     }
 
     Image{
@@ -58,8 +54,6 @@ Column{
                     pdfReader.title = name +" uuid: " +uuid + " location: " + location
                     pdfReader.uuid = uuid
                     pdfReader.init_read_location = location
-                    //pdfReader.init(location);
-                    //pdfReader.model = model
                     stackView.push(pdfReader);
                 }
                 else{
@@ -70,8 +64,6 @@ Column{
         }
 
     }
-
-
 
     Text{
         width: parent.width
