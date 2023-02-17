@@ -1,6 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QtWebView/QtWebView>
+//#include <QtWebView/QtWebView>
 #include <QQmlContext>
 #include <QLocale>
 #include <QTranslator>
@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
     QGuiApplication app(argc, argv);
     
-    	QtWebView::initialize();
+    	//QtWebView::initialize();
 
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
