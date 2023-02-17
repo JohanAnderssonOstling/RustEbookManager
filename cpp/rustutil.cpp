@@ -6,12 +6,16 @@
 
 
 
-QString RustUtil::rustStringToQString(rust::Str str){
-	std::string std_str = std::string(str);
+QString RustUtil::asQString(rust::Str s){
+	std::string std_str = std::string(s);
 	return QString::fromStdString(std_str);
 }
 
-rust::Str RustUtil::qStringToRustString(QString str){
-	return rust::Str(str.toStdString());
+rust::String RustUtil::asRustString(QString s){
+	return rust::String(s.toStdString());
 }
 
+int RustUtil::asInt(rust::Str s){
+	std::string std_str = std::string(s);
+	return std::stoi(std_str);
+}

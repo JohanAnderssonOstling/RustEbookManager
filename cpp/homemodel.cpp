@@ -56,5 +56,5 @@ QHash<int, QByteArray> HomeModel::roleNames() const {
 void HomeModel::openLibrary(int row){
 	Library library = libraryList.at(row);
 
-	QString libraryContext = "library" + RustUtil::rustStringToQString(library.uuid);
+	QString libraryContext = "library" + RustUtil::asQString(library.uuid);
 }

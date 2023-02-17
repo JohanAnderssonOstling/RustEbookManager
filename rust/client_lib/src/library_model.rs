@@ -1,7 +1,9 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
+
 use image::DynamicImage;
+
 use library_db::LibraryDB;
 
 use crate::constant;
@@ -19,6 +21,7 @@ pub const COVER_WIDTHS: [u32; 4] = [64, 128, 256, 512];
 pub const MAX_HEIGHT_RATION: f32 = 1.6;
 
 pub fn open_library(uuid: &str, path: &str) -> Vec<LibraryDBModel> {
+	println!("Opening library: {}", uuid);
 	let library = LibraryDBModel {
 		uuid: String::from(uuid),
 		path: String::from(path),
@@ -34,7 +37,6 @@ fn create_thumb_dir(uuid: &str) -> PathBuf {
 }
 
 impl LibraryDBModel {
-
 	fn add_folder_contents_to_db(&self, folders: &Vec<Dir>, books: &Vec<Book>, parent_folder_id: u32) -> Vec<Dir> {
 		let db_conn = self.db_conn.lock().unwrap();
 		db_conn.add_folders(&folders);
@@ -79,7 +81,7 @@ impl LibraryDBModel {
 
 	pub fn create_thumbnails(&self, thumbnail_folder: PathBuf) {
 		let orig_img_path: PathBuf = thumbnail_folder.clone().join("orig.jpg");
-		let orig_img= match image::open(orig_img_path){
+		let orig_img = match image::open(orig_img_path) {
 			Ok(img) => img,
 			Err(err) => {
 				println!("Error opening image: {}", err);
@@ -123,8 +125,6 @@ impl LibraryDBModel {
 		let db_conn = self.db_conn.lock().unwrap();
 		db_conn.get_book_location(book_uuid)
 	}
-
-
 }
 
 pub fn create_folder(path: &Path, folder_id: u32) -> Dir {

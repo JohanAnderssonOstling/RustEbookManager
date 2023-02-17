@@ -11,40 +11,38 @@ Column{
     width: parent.cellWidth
     height: parent.cellHeight
 
-	Rectangle{
-		id: coverPlaceHolder
-		visible: !hasCover
+    Rectangle{
+        id: coverPlaceHolder
+        visible: !hasCover
         width: column.coverWidth
         height: column.coverHeight
-		color: "cornflowerblue"
-		MouseArea{
-                    anchors.fill: parent
-                    onClicked:{
-                        var pdfReaderComponent = Qt.createComponent("PDFReader.qml");
-                        if (pdfReaderComponent.status == Component.Ready){
-                            var pdfReader = pdfReaderComponent.createObject(parent);
-                            pdfReader.documentSource = "file://" + path
-                            console.log("Opening");
-                            pdfReader.title = name +" uuid: " +uuid + " location: " + location
-                            pdfReader.uuid = uuid
-                            pdfReader.init_read_location = location
-                            pdfReader.init(location);
-                             //pdfReader.model = model
-                            console.log("Pushing pdfReader");
-                            stackView.push(pdfReader);
-                        }
-                        else{
-                            console.log("error loading component");
-                            console.log(pdfReaderComponent.errorString());
-                        }
-
-                    }
+        color: "cornflowerblue"
+        MouseArea{
+            anchors.fill: parent
+            onClicked:{
+                var pdfReaderComponent = Qt.createComponent("PDFReader.qml");
+                if (pdfReaderComponent.status == Component.Ready){
+                    var pdfReader = pdfReaderComponent.createObject(parent);
+                    pdfReader.documentSource = "file://" + path
+                    pdfReader.title = name +" uuid: " +uuid + " location: " + location
+                    pdfReader.uuid = uuid
+                    pdfReader.init_read_location = location
+                    pdfReader.init(location);
+                    //pdfReader.model = model
+                    stackView.push(pdfReader);
+                }
+                else{
+                    console.log("error loading component");
+                    console.log(pdfReaderComponent.errorString());
                 }
 
+            }
+        }
+
     }
-	Image{
+    Image{
         id: image
-         visible: hasCover
+        visible: hasCover
         source: "file://" + cover
         asynchronous: true
         MouseArea{
@@ -54,26 +52,29 @@ Column{
                 if (pdfReaderComponent.status == Component.Ready){
                     var pdfReader = pdfReaderComponent.createObject(parent);
                     pdfReader.documentSource = "file://" + path
-                    pdfReader.model = model
-                    console.log("Pushing pdfReader");
+                    pdfReader.title = name +" uuid: " +uuid + " location: " + location
+                    pdfReader.uuid = uuid
+                    pdfReader.init_read_location = location
+                    pdfReader.init(location);
+                    //pdfReader.model = model
                     stackView.push(pdfReader);
-                    console.log("Pushed pdfReader");
-
                 }
-                else
+                else{
                     console.log("error loading component");
+                    console.log(pdfReaderComponent.errorString());
+                }
             }
         }
 
-}
+    }
 
 
 
-	Text{
-	width: parent.width
-	height: 40
-    	text:name
-    	horizontalAlignment: Text.AlignHCenter
+    Text{
+        width: parent.width
+        height: 40
+        text:name
+        horizontalAlignment: Text.AlignHCenter
         wrapMode: Text.Wrap
         elide: Text.ElideRight
     }

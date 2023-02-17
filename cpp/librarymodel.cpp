@@ -4,7 +4,7 @@
 
 #include "librarymodel.h"
 #include "rustutil.h"
-
+using namespace RustUtil;
 LibraryModel::LibraryModel(QObject *parent) : QAbstractListModel(parent){
 	coverWidths = get_cover_widths();
 }
@@ -31,33 +31,29 @@ QVariant LibraryModel::data(const QModelIndex &index, int role) const{
 }
 
 QString LibraryModel::getCoverPath(int row) const{
-	rust::String uuid = libraryDBModel.at(0).get_cover_path(
-			bookList.at(row).uuid);
-	return QString::fromStdString(std::string(uuid)) + "/" +
+	rust::String uuid = libraryDBModel.at(0).get_cover_path(bookList.at(row).uuid);
+	return asQString(uuid) + "/" +
 		   QString::number(getCoverWidth()) + ".jpg";
 }
 
 QVariant LibraryModel::bookData(int row, int role) const{
-	qInfo() << "Getting data from" << role;
 	const Book book = bookList.at(row);
 	switch (role){
 		case UUIDRole:
-			qInfo() << "UUIDRole" << QString::fromStdString(std::string(book.uuid));
-			return QString::fromStdString(std::string((book.uuid)));
+			qInfo() << "UUIDRole" << asQString(book.uuid);
+			return asQString(book.uuid);
 		case NameRole:
-			return QString::fromStdString(std::string((book.name)));
+			return asQString(book.name);
 		case PathRole:
-			return QString::fromStdString(std::string((book.path)));
+			return asQString(book.path);
 		case AuthorRole:
 			return "Placeholder";
 		case HasCoverRole:
-			return false;
+			return true;
 		case CoverRole:
 			return getCoverPath(row);
 		case LocationRole:
-			std::string location = std::string(book.read_location);
-			int int_location = std::stoi(location);
-			return int_location;
+			return asInt(book.read_location);
 
 	}
 }
@@ -68,7 +64,7 @@ QVariant LibraryModel::folderData(int row, int role) const{
 		case UUIDRole:
 			return dir.id;
 		case NameRole:
-			return QString::fromStdString(std::string(dir.name));
+			return asQString(dir.name);
 		case HasCoverRole:
 			return false;
 		default:
@@ -89,11 +85,8 @@ QHash<int, QByteArray> LibraryModel::roleNames() const{
 	return mapping;
 }
 
-void LibraryModel::openLibrary(const QString &uuid, QString url_path){
-	QString path = url_path.replace("file://", "");
-	rust::String rust_uuid = rust::String(uuid.toStdString());
-	rust::String rust_path = rust::String(path.toStdString());
-	libraryDBModel = open_library(rust_uuid, rust_path);
+void LibraryModel::openLibrary(QString uuid, QString path){
+	libraryDBModel = open_library(asRustString(uuid), asRustString(path));
 	this->changeFolder(0);
 }
 
@@ -126,12 +119,6 @@ int LibraryModel::getCoverWidth() const{
 }
 
 void LibraryModel::	setBookLocation(const QString& bookUUID, const QString& location, int percentage){
-	rust::String rust_uuid = rust::String(bookUUID.toStdString());
-	rust::String rust_location = rust::String(location.toStdString());
-	qInfo() << "Setting location to" << location;
-
-	libraryDBModel.at(0).set_book_location(rust_uuid, rust_location, 0);
-
-
+	libraryDBModel.at(0).set_book_location(asRustString(bookUUID),
+										   asRustString(location), 0);
 }
-

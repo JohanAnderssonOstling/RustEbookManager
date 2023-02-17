@@ -10,7 +10,8 @@
 
 namespace RustUtil{
 
-	QString rustStringToQString(rust::Str s);
-	rust::Str qStringToRustString(QString s);
+	QString asQString(rust::Str s);
+	rust::String asRustString(QString s);
+	int asInt(rust::Str s);
 }
 #endif //RUSTEBOOKMANGER_RUSTUTIL_H
