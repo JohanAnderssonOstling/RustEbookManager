@@ -29,9 +29,8 @@ ColumnLayout {
 		Layout.fillHeight: true
 		cellWidth: 260
 		cellHeight: 330
-		focus: true
 		clip: true
-		activeFocusOnTab: true
+
 		model: HomeModel
 		highlight: Rectangle { color: "lightblue" }
 		delegate:
@@ -50,5 +49,3 @@ ColumnLayout {
 	}
 
 }
-
-

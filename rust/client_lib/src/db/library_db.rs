@@ -12,14 +12,22 @@ pub struct LibraryDB {
 
 impl LibraryDB {
 	pub fn open(uuid: &str) -> Self {
-		let db_url = constant::DATA_DIR.join(uuid).join("library.db");
-		let conn = Connection::open(db_url).unwrap();
+		println!("Opening library database for library: {}", uuid);
+		let db_url: PathBuf = constant::DATA_DIR.join(uuid).join("library.db");
+		let db_path = db_url.clone();
+		let path_str = db_path.to_str().unwrap();
+		let conn = match Connection::open(db_url){
+			Ok(conn) => conn,
+			Err(e) => panic!("Failed to open database: {} with error: {}",path_str, e),
+		};
+
 		let mut library_db = LibraryDB {
 			connection: conn
 		};
 		library_db.create_schema();
 		library_db
 	}
+
 	pub fn create_schema(&self) {
 		let folder_query = "CREATE TABLE IF NOT EXISTS FOLDER (
         folder_id INTEGER PRIMARY KEY,
@@ -154,10 +162,4 @@ impl LibraryDB {
 	pub fn close(&self) {
 		//self.connection.close().unwrap();
 	}
-}
-
-#[cfg(test)]
-mod tests{
-	use super::*;
-
 }

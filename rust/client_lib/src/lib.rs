@@ -16,7 +16,10 @@ use std::fs;
 use db::*;
 use lazy_static::lazy_static;
 use std::sync::Mutex;
+use env_logger::{Builder, Target};
 use crate::ffi::*;
+#[macro_use]
+extern crate log;
 
 lazy_static!{
     static ref HOME_DB_CONN: Mutex<home_db::HomeDb> = Mutex::new(home_db::HomeDb::new());

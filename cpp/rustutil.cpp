@@ -11,8 +11,8 @@ QString RustUtil::asQString(rust::Str s){
 	return QString::fromStdString(std_str);
 }
 
-rust::Str RustUtil::asRustStr(QString s){
-	return rust::Str(s.toStdString());
+rust::String RustUtil::asRustString(QString s){
+	return rust::String(s.toStdString());
 }
 
 int RustUtil::asInt(rust::Str s){

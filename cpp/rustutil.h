@@ -11,7 +11,7 @@
 namespace RustUtil{
 
 	QString asQString(rust::Str s);
-	rust::Str asRustStr(QString s);
+	rust::String asRustString(QString s);
 	int asInt(rust::Str s);
 }
 #endif //RUSTEBOOKMANGER_RUSTUTIL_H
