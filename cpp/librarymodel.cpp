@@ -58,6 +58,7 @@ QVariant LibraryModel::bookData(int row, int role) const{
 			std::string location = std::string(book.read_location);
 			int int_location = std::stoi(location);
 			return int_location;
+
 	}
 }
 

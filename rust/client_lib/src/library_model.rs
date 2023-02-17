@@ -34,6 +34,7 @@ fn create_thumb_dir(uuid: &str) -> PathBuf {
 }
 
 impl LibraryDBModel {
+
 	fn add_folder_contents_to_db(&self, folders: &Vec<Dir>, books: &Vec<Book>, parent_folder_id: u32) -> Vec<Dir> {
 		let db_conn = self.db_conn.lock().unwrap();
 		db_conn.add_folders(&folders);
@@ -122,6 +123,7 @@ impl LibraryDBModel {
 		let db_conn = self.db_conn.lock().unwrap();
 		db_conn.get_book_location(book_uuid)
 	}
+
 
 }
 
