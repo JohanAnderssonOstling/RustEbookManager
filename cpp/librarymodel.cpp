@@ -40,7 +40,6 @@ QVariant LibraryModel::bookData(int row, int role) const{
 	const Book book = bookList.at(row);
 	switch (role){
 		case UUIDRole:
-			qInfo() << "UUIDRole" << asQString(book.uuid);
 			return asQString(book.uuid);
 		case NameRole:
 			return asQString(book.name);
