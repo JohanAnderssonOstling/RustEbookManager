@@ -14,6 +14,7 @@ pub fn parse_book(path: &str, thumb_dir: PathBuf) -> Book{
         uuid,
         name: file_name,
         path: path.to_string(),
+        read_location: "0".to_string(),
         ..Default::default()
     };
     match file_extension.as_str() {

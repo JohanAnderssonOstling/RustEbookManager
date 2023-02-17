@@ -38,34 +38,36 @@ QString LibraryModel::getCoverPath(int row) const{
 }
 
 QVariant LibraryModel::bookData(int row, int role) const{
+	qInfo() << "Getting data from" << role;
+	const Book book = bookList.at(row);
 	switch (role){
-		case IDRole:
-			return QString::fromStdString(std::string((bookList.at(row).uuid)));
+		case UUIDRole:
+			qInfo() << "UUIDRole" << QString::fromStdString(std::string(book.uuid));
+			return QString::fromStdString(std::string((book.uuid)));
 		case NameRole:
-			return QString::fromStdString(std::string((bookList.at(row).name)));
+			return QString::fromStdString(std::string((book.name)));
 		case PathRole:
-			return QString::fromStdString(std::string((bookList.at(row).path)));
+			return QString::fromStdString(std::string((book.path)));
 		case AuthorRole:
 			return "Placeholder";
-		case LocationRole:
-			return QString::fromStdString(
-					std::string((bookList.at(row).read_location)));
 		case HasCoverRole:
 			return false;
 		case CoverRole:
 			return getCoverPath(row);
-		default:
-			return {};
+		case LocationRole:
+			std::string location = std::string(book.read_location);
+			int int_location = std::stoi(location);
+			return int_location;
 	}
 }
 
 QVariant LibraryModel::folderData(int row, int role) const{
+	Dir dir = folderList.at(row);
 	switch (role){
-		case IDRole:
-			return folderList.at(row).id;
+		case UUIDRole:
+			return dir.id;
 		case NameRole:
-			return QString::fromStdString(
-					std::string((folderList.at(row).name)));
+			return QString::fromStdString(std::string(dir.name));
 		case HasCoverRole:
 			return false;
 		default:
@@ -75,7 +77,7 @@ QVariant LibraryModel::folderData(int row, int role) const{
 
 QHash<int, QByteArray> LibraryModel::roleNames() const{
 	static QHash<int, QByteArray> mapping{
-			{IDRole,       "id"},
+			{UUIDRole,     "uuid"},
 			{NameRole,     "name"},
 			{PathRole,     "path"},
 			{LocationRole, "location"},
@@ -122,9 +124,13 @@ int LibraryModel::getCoverWidth() const{
 	return coverWidths.at(coverWidthIndex);
 }
 
-void LibraryModel::setBookLocation(QString bookUUID, QString location){
+void LibraryModel::	setBookLocation(const QString& bookUUID, const QString& location, int percentage){
 	rust::String rust_uuid = rust::String(bookUUID.toStdString());
 	rust::String rust_location = rust::String(location.toStdString());
+	qInfo() << "Setting location to" << location;
+
 	libraryDBModel.at(0).set_book_location(rust_uuid, rust_location, 0);
+
+
 }
 

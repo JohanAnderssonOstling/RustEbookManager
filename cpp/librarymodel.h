@@ -23,7 +23,7 @@ private:
 
 public:
 	enum Roles {
-		IDRole = Qt::UserRole,
+		UUIDRole = Qt::UserRole,
 		NameRole,
 		PathRole,
 		AuthorRole,
@@ -47,24 +47,13 @@ public:
 
 public slots:
 	void openLibrary(const QString& uuid, QString path);
-
-	QVariant bookData(int row, int role) const;
-
+	[[nodiscard]] QVariant bookData(int row, int role) const;
 	QVariant folderData(int row, int role) const;
-
 	void changeFolder(int folderID);
-
 	bool prevFolder();
-
 	bool isFolder(int index);
-
 	QString getCoverPath(int row) const;
-
-
 	void setCoverWidthIndex(int coverWidthIndex);
-
-	void setBookLocation(QString bookUUID, QString location);
+	void setBookLocation(const QString& bookUUID, const QString& location, int percentage);
 };
-
-
 #endif //RUSTEBOOKMANGER_LIBRARYMODEL_H

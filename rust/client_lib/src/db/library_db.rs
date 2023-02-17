@@ -86,6 +86,7 @@ impl LibraryDB {
 			folder_id: row.get(7).unwrap(),
 		}
 	}
+
 	pub fn row_to_folder(row: &rusqlite::Row) -> Dir {
 		Dir {
 			id: row.get(0).unwrap(),
@@ -93,6 +94,7 @@ impl LibraryDB {
 			parent_id: row.get(2).unwrap(),
 		}
 	}
+
 	pub fn get_books_by_folder(&self, folder_id: u32) -> Vec<Book> {
 		let query = "SELECT * FROM BOOK where folder_id = ?";
 		self.select(query, params![folder_id], LibraryDB::row_to_book)
@@ -103,9 +105,11 @@ impl LibraryDB {
 	}
 
 	pub fn set_book_location(&self, book_uuid: &str, location: &str, percentage: u32) {
-		let query = "UPDATE BOOK SET read_location = ?, read_percentage = ? WHERE book_uuid = ?";
-		let mut stmt = self.connection.prepare(query).unwrap();
-		stmt.execute(params![location, percentage, book_uuid]).unwrap();
+		println!("set_book_location: {} {} {}", book_uuid, location, percentage);
+		let query: &str = "UPDATE BOOK SET read_location = ?, read_percentage = ? WHERE book_uuid = ?";
+		let mut stmt: Statement = self.connection.prepare(query).unwrap();
+		stmt.execute(params![location, percentage, book_uuid])
+			.expect("TODO: panic message");
 	}
 
 	pub fn get_book_location(&self, book_uuid: &str) -> ReadPosition{
@@ -146,7 +150,14 @@ impl LibraryDB {
 		let query = "DELETE FROM FOLDER";
 		self.connection.execute(query, []).unwrap();
 	}
+
 	pub fn close(&self) {
 		//self.connection.close().unwrap();
 	}
+}
+
+#[cfg(test)]
+mod tests{
+	use super::*;
+
 }
