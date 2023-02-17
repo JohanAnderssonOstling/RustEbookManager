@@ -53,7 +53,9 @@ QVariant LibraryModel::bookData(int row, int role) const{
 		case CoverRole:
 			return getCoverPath(row);
 		case LocationRole:
-			return asInt(book.read_location);
+			ReadPosition pos = libraryDBModel.at(0).get_book_location(book.uuid);
+
+			return asInt(pos.read_location);
 
 	}
 }

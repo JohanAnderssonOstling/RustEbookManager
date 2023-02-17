@@ -113,7 +113,6 @@ impl LibraryDB {
 	}
 
 	pub fn set_book_location(&self, book_uuid: &str, location: &str, percentage: u32) {
-		println!("set_book_location: {} {} {}", book_uuid, location, percentage);
 		let query: &str = "UPDATE BOOK SET read_location = ?, read_percentage = ? WHERE book_uuid = ?";
 		let mut stmt: Statement = self.connection.prepare(query).unwrap();
 		stmt.execute(params![location, percentage, book_uuid])
