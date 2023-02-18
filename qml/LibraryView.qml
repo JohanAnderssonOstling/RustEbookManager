@@ -48,7 +48,6 @@ ColumnLayout{
 		cellWidth: coverWidth + ((width % (coverWidth + 0.0)) / (elementsPerRow))
 		cellHeight: coverWidth * 1.6 + 40
 		clip:true
-		focus: true
 		ScrollBar.vertical: ScrollBar{}
 		delegate: LibraryViewDelegate{
 		    coverWidth: libraryGrid.coverWidth

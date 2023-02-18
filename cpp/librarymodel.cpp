@@ -40,7 +40,6 @@ QVariant LibraryModel::bookData(int row, int role) const{
 	const Book book = bookList.at(row);
 	switch (role){
 		case UUIDRole:
-			qInfo() << "UUIDRole" << asQString(book.uuid);
 			return asQString(book.uuid);
 		case NameRole:
 			return asQString(book.name);
@@ -53,7 +52,9 @@ QVariant LibraryModel::bookData(int row, int role) const{
 		case CoverRole:
 			return getCoverPath(row);
 		case LocationRole:
-			return asInt(book.read_location);
+			ReadPosition pos = libraryDBModel.at(0).get_book_location(book.uuid);
+
+			return asInt(pos.read_location);
 
 	}
 }

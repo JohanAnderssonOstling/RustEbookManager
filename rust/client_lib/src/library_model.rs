@@ -118,7 +118,6 @@ impl LibraryDBModel {
 	pub fn set_book_location(&self, book_uuid: &str, location: &str, percentage: u32) {
 		let db_conn = self.db_conn.lock().unwrap();
 		db_conn.set_book_location(book_uuid, location, percentage);
-		println!("Set book location for {} to {} {}", book_uuid, location, percentage);
 	}
 
 	pub fn get_book_location(&self, book_uuid: &str) -> ReadPosition {

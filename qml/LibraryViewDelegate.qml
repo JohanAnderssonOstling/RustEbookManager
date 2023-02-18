@@ -3,7 +3,7 @@ import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
 import Qt.labs.platform 1.1
 import johandost.LibraryModel 1.0
-
+import QtQuick.Pdf
 Column{
     id: column
     property int coverWidth
@@ -27,19 +27,16 @@ Column{
                     pdfReader.title = name +" uuid: " +uuid + " location: " + location
                     pdfReader.uuid = uuid
                     pdfReader.init_read_location = location
-                    pdfReader.init(location);
-                    //pdfReader.model = model
                     stackView.push(pdfReader);
                 }
                 else{
                     console.log("error loading component");
                     console.log(pdfReaderComponent.errorString());
                 }
-
             }
         }
-
     }
+
     Image{
         id: image
         visible: hasCover
@@ -48,6 +45,8 @@ Column{
         MouseArea{
             anchors.fill: parent
             onClicked:{
+
+                console.log("clicked")
                 var pdfReaderComponent = Qt.createComponent("PDFReader.qml");
                 if (pdfReaderComponent.status == Component.Ready){
                     var pdfReader = pdfReaderComponent.createObject(parent);
@@ -55,8 +54,6 @@ Column{
                     pdfReader.title = name +" uuid: " +uuid + " location: " + location
                     pdfReader.uuid = uuid
                     pdfReader.init_read_location = location
-                    pdfReader.init(location);
-                    //pdfReader.model = model
                     stackView.push(pdfReader);
                 }
                 else{
@@ -67,8 +64,6 @@ Column{
         }
 
     }
-
-
 
     Text{
         width: parent.width

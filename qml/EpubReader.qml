@@ -25,7 +25,7 @@ ColumnLayout{
 		//console.log(functionCall)
 		//epubWebView.runJavaScript(functionCall);
 	}
-
+/*
 	WebView{
 		function nextPage(){
 			epubWebView.runJavaScript("nextPage();", function(location){
@@ -53,5 +53,5 @@ ColumnLayout{
 		});
 
 		}
+		*/
 }
-

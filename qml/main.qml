@@ -19,6 +19,7 @@ Window {
 				ToolButton{
 					visible: stackView.currentItem.showBackButton
 					text: "<"
+					focus: false
 					onClicked: stackView.currentItem.backButtonPressed();
 				}
 				Label{
@@ -38,6 +39,7 @@ Window {
 		id: stackView
 		Layout.fillWidth: true
 		Layout.fillHeight: true
+		focus: true
 		HomeView{id: homeView}
 		EpubReader{id: epubReader}
 		initialItem: homeView
