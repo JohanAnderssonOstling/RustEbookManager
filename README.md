@@ -39,7 +39,7 @@ To run the project, run:
 
 ## Features
 - Create a library by importing a directory of ebooks and pdfs.
-- Generates thumbnails for pdfs to be used as covers when browsing a library.
-- Read ebooks and pdfs in the library.
+- Displays the cover of the ebook or pdf when browsing a library. 
+- Remembers the active page of a document when closing it, and opens it to that page when opened again.
 
 ## Design
