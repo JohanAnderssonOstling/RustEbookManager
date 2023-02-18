@@ -35,8 +35,9 @@ ColumnLayout{
             pdfPageView.setPage(newPage);
         }
 
-        Layout.alignment: Qt.AlignBottom
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         Layout.fillWidth: true
+        Layout.fillHeight: true
         Layout.margins: 20
         property bool first: false
         border.color: "black"
@@ -65,5 +66,5 @@ ColumnLayout{
 
 
     }
-    RowLayout{Layout.fillWidth: true}
+    PDFFooter{}
 }

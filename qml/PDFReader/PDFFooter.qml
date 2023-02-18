@@ -1,20 +1,24 @@
 
 import QtQuick
 import QtQuick.Controls
-
+import QtQuick.Layouts
 ToolBar {
-    width: parent.width
+
     id: pdfFooterToolBar
-    RowLayout{}
-    Label {
-        id: pdfFooterPageLabel
-        text: "Page " + pdfPageView.currentPage + " of " + pdfPageView.pageCount
+    Layout.alignment: Qt.AlignBottom
+    Layout.fillWidth: true
+    RowLayout{
+        Label {
+                id: pdfFooterPageLabel
+                text: "Page " + pdfPageView.currentPage + " of " + pdfPageView.pageCount
+            }
+            ToolButton {
+                id: pdfFooterPreviousPageButton
+                text: "Previous"
+                onClicked: {
+                    pdfPageView.previousPage()
+                }
+            }
     }
-    ToolButton {
-        id: pdfFooterPreviousPageButton
-        text: "Previous"
-        onClicked: {
-            pdfPageView.previousPage()
-        }
-    }
+
 }
