@@ -11,7 +11,7 @@ Column{
 		MouseArea{
 			anchors.fill: parent
 			acceptedButtons: Qt.LeftButton | Qt.RightButton
-			onClicked: {
+			onClicked: (mouse) => {
 				if (mouse.button & Qt.LeftButton){
 					var libraryViewComponent = Qt.createComponent("LibraryView.qml", {library_uuid: model.uuid});
 					if (libraryViewComponent.status == Component.Ready){

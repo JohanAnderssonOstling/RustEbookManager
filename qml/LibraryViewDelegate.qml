@@ -19,7 +19,7 @@ Column{
         color: "cornflowerblue"
         MouseArea{
             anchors.fill: parent
-            onClicked:{
+            onClicked: (mouse) => {
                 var pdfReaderComponent = Qt.createComponent("PDFReader.qml");
                 if (pdfReaderComponent.status == Component.Ready){
                     var pdfReader = pdfReaderComponent.createObject(parent);
@@ -44,12 +44,16 @@ Column{
         asynchronous: true
         MouseArea{
             anchors.fill: parent
-            onClicked:{
+            onClicked: (mouse) =>{
 
-                console.log("clicked")
-                var pdfReaderComponent = Qt.createComponent("PDFReader.qml");
+                var pdfReaderComponent = Qt.createComponent("PDFReader/PDFReader.qml");
                 if (pdfReaderComponent.status == Component.Ready){
                     var pdfReader = pdfReaderComponent.createObject(parent);
+                    if (pdfReader == null) {
+                        console.log("error creating object");
+                        console.log(pdfReaderComponent.errorString());
+                        return;
+                    }
                     pdfReader.documentSource = "file://" + path
                     pdfReader.title = name +" uuid: " +uuid + " location: " + location
                     pdfReader.uuid = uuid
