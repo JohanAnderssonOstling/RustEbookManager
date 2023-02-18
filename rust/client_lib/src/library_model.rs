@@ -10,6 +10,7 @@ use crate::constant;
 use crate::db::library_db;
 use crate::library_model::ffi::*;
 use crate::parser::parse_book;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
 pub struct LibraryDBModel {
 	pub uuid: String,
@@ -49,10 +50,15 @@ impl LibraryDBModel {
 		db_conn.get_folders(parent_folder_id)
 	}
 	pub fn scan_library(&self) {
-		self.scan_library_aux(&self.path, 0);
+		let runtime = tokio::runtime::Builder::new_multi_thread()
+			.enable_all()
+			.build()
+			.unwrap();
+		runtime.spawn(self.scan_library_aux(&self.path, 0));
 	}
 
-	fn scan_library_aux(&self, path: &str, parent_folder_id: u32) {
+
+	async fn scan_library_aux(&self, path: &str, parent_folder_id: u32) {
 		let mut dirs: Vec<Dir> = Vec::new();
 		let mut books: Vec<Book> = Vec::new();
 		println!("Scanning {}", path);
@@ -74,8 +80,8 @@ impl LibraryDBModel {
 		//Add folders and books to db and get the folders with ids
 		dirs = self.add_folder_contents_to_db(&dirs, &books, parent_folder_id);
 		//Iterate over the found fol
-		dirs.iter().map(|folder|
-			self.scan_library_aux(&*format!("{}/{}", path, folder.name), folder.id)).collect()
+		//dirs.iter().map(|folder|
+		//	self.scan_library_aux(&*format!("{}/{}", path, folder.name), folder.id)).collect()
 	}
 
 	pub fn create_thumbnails(&self, thumbnail_folder: PathBuf) {
