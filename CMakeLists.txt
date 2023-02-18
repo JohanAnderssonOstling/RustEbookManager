@@ -29,7 +29,7 @@ find_package(Corrosion REQUIRED)
 include(corrosion_cxx.cmake)
 
 qt_add_executable(EbookTest cpp/main.cpp cpp/homemodel.cpp cpp/librarymodel.cpp cpp/homemodel.h cpp/rustutil.cpp cpp/rustutil.h
-        qml/main.qml qml/HomeView.qml qml/LibraryView.qml qml/EpubReader.qml)
+        qml/main.qml qml/HomeView.qml qml/LibraryView.qml qml/Epub/EpubReader.qml)
 add_library_rust(PATH rust/client_lib NAMESPACE my)
 target_link_libraries(EbookTest
         PUBLIC my::client_lib

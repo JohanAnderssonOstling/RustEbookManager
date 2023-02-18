@@ -12,32 +12,31 @@ ColumnLayout{
     property string uuid
     property var init_read_location
 
-
     PdfPageView {
         id : pdfPageView
-
         document: PdfDocument{
             id: pdfDocument
             source: documentSource
         }
-        function setPage(){
-        }
-        function changePage(delta){
+        property var pageCount: pdfPageView.document.pageCount
+        function setPage(newPage){
             let pageCount = pdfPageView.document.pageCount;
-            var newPage = pdfPageView.currentPage + delta;
+            pdfPageView.goToPage(newPage);
             if(newPage < 0 || newPage >= pageCount){
                 console.log("Page out of range: " + newPage)
                 return;
             }
             var read_percentage = Math.round((newPage / pageCount) * 100);
-            pdfPageView.goToPage(newPage);
+            pdfPageView.setPage(newPage);
             libraryModel.setBookLocation(uuid, newPage.toString(), read_percentage);
         }
-        function nextPage(){pdfPageView.changePage(1);}
-        function previousPage(){pdfPageView.changePage(-1);}
+        function changePage(delta){
+            var newPage = pdfPageView.currentPage + delta;
+            pdfPageView.setPage(newPage);
+        }
+
         Layout.alignment: Qt.AlignBottom
         Layout.fillWidth: true
-        Layout.fillHeight: true
         Layout.margins: 20
         property bool first: false
         border.color: "black"
@@ -49,7 +48,7 @@ ColumnLayout{
             if (status == 1 && !first){
                 first = true;
                 console.log("Loaded book: " + name + " at position " + init_read_location);
-
+                window.title = pdfDocument.subject
                 pdfPageView.goToPage(init_read_location);
             }
         }
@@ -57,27 +56,14 @@ ColumnLayout{
             Keys.onPressed: (event) => {
                 focus = true;
                     if (event.key == Qt.Key_Right){
-                            pdfPageView.nextPage();
+                            pdfPageView.changePage(1);
                         }
                         else if(event.key == Qt.Key_Left){
-                            pdfPageView.previousPage()
+                            pdfPageView.changePage(-1);
                         }
                     }
 
-        MouseArea{
-            anchors.fill: parent
-            onClicked: (mouse) => {
-                           //Next page if clicked on right third of area mousarea
-                           if(mouseX > width * 0.66){
-                               pdfPageView.nextPage();
-                           }
-                           else if(mouseY < width * 0.33){
-                               pdfPageView.previousPage()
-                           }
-                       }
-        }
+
     }
-    Text{
-        text: pdfPageView.currentPage
-    }
+    RowLayout{Layout.fillWidth: true}
 }
