@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 use epub::doc::EpubDoc;
 use crate::library_model::ffi::Book;
 use uuid::Uuid;
-pub fn parse_epub(book: Book, thumb_dir: PathBuf) -> Book{
+pub fn parse_epub(book: Book, thumb_dir: &PathBuf) -> Book{
     let mut epub_book = book.clone();
     let mut epub = EpubDoc::new(book.path).unwrap();
     let cover = epub.get_cover().unwrap();
