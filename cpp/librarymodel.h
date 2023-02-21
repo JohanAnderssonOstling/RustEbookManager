@@ -18,7 +18,7 @@ private:
 	rust::vec<Dir> folderList;
 	rust::vec<uint32_t> coverWidths;
 	int coverWidthIndex = 2;
-	rust::vec<LibraryDBModel> libraryDBModel;
+	rust::String model_uuid;
 	QStack<int> navStack;
 
 public:

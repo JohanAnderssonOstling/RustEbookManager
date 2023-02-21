@@ -31,7 +31,9 @@ QVariant LibraryModel::data(const QModelIndex &index, int role) const{
 }
 
 QString LibraryModel::getCoverPath(int row) const{
-	rust::String uuid = libraryDBModel.at(0).get_cover_path(bookList.at(row).uuid);
+	rust::String uuid = get_cover_path(model_uuid, bookList.at(row).uuid);
+	QString path = asQString(uuid);
+	qInfo() << "Cover path is" << path;
 	return asQString(uuid) + "/" +
 		   QString::number(getCoverWidth()) + ".jpg";
 }
@@ -52,7 +54,7 @@ QVariant LibraryModel::bookData(int row, int role) const{
 		case CoverRole:
 			return getCoverPath(row);
 		case LocationRole:
-			ReadPosition pos = libraryDBModel.at(0).get_book_location(book.uuid);
+			ReadPosition pos = get_book_location(model_uuid, book.uuid);
 
 			return asInt(pos.read_location);
 
@@ -87,14 +89,15 @@ QHash<int, QByteArray> LibraryModel::roleNames() const{
 }
 
 void LibraryModel::openLibrary(QString uuid, QString path){
-	libraryDBModel = open_library(asRustString(uuid), asRustString(path));
+	this->model_uuid = asRustString(uuid);
+	open_library(model_uuid, asRustString(path));
 	this->changeFolder(0);
 }
 
 void LibraryModel::changeFolder(int folderID){
 	beginResetModel();
-	this->folderList = libraryDBModel.at(0).get_folders(folderID);
-	this->bookList = libraryDBModel.at(0).get_books(folderID);
+	this->folderList = get_folders(model_uuid, folderID);
+	this->bookList = get_books(model_uuid, folderID);
 	endResetModel();
 	navStack.push(folderID);
 }
@@ -120,6 +123,7 @@ int LibraryModel::getCoverWidth() const{
 }
 
 void LibraryModel::	setBookLocation(const QString& bookUUID, const QString& location, int percentage){
-	libraryDBModel.at(0).set_book_location(asRustString(bookUUID),
-										   asRustString(location), 0);
+	set_book_location(model_uuid,
+					  asRustString(bookUUID),
+					  asRustString(location), 0);
 }
