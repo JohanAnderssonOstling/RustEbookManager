@@ -12,7 +12,6 @@ pub struct LibraryDB {
 
 impl LibraryDB {
 	pub fn open(uuid: &str) -> Self {
-		println!("Opening library database for library: {}", uuid);
 		let db_url: PathBuf = constant::DATA_DIR.join(uuid).join("library.db");
 		let db_path = db_url.clone();
 		let path_str = db_path.to_str().unwrap();

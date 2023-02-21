@@ -40,8 +40,8 @@ fn print_field(field: &FieldDictionary, resolve: &impl Resolve) {
 }
 
 
-pub fn parse_pdf(book: Book, thumb_dir : PathBuf) -> Book{
-    let result = get_cover(&book.path, thumb_dir);
+pub fn parse_pdf(book: Book, thumb_dir : &PathBuf) -> Book{
+    let result = (get_cover(&book.path, thumb_dir));
     let handled = match result{
         Ok(_) => (),
         Err(err) => println!("Error: {}", err),
@@ -50,7 +50,7 @@ pub fn parse_pdf(book: Book, thumb_dir : PathBuf) -> Book{
     book
 }
 
-pub fn get_cover(pdf_path: &str, thumb_dir: PathBuf) -> Result<(), PdfError> {
+pub fn get_cover(pdf_path: &str, thumb_dir: &PathBuf) -> Result<(), PdfError> {
     let file = PdfFile::open(pdf_path)?;
     let first_page = file.get_page(0)?;
     let resources = first_page.resources()?;
@@ -85,4 +85,3 @@ pub fn get_cover(pdf_path: &str, thumb_dir: PathBuf) -> Result<(), PdfError> {
     Ok(())
 
 }
-
