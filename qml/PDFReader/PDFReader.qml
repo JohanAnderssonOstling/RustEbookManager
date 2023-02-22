@@ -66,5 +66,11 @@ ColumnLayout{
 
 
     }
-    PDFFooter{}
+    //Button{
+
+       //text: "Menu"
+        //onClicked: {
+          //  rootDrawer.open();
+        //}
+      //}
 }

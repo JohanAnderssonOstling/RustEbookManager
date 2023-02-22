@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
+import "PDFReader"
 Window {
 	id: window
 	width: 640
@@ -45,5 +46,13 @@ Window {
 		}
 
 	}
+	Drawer{
+            id : rootDrawer
+            edge: Qt.LeftEdge
+            width: 200
+            height: parent.height
+            modal: false
+            PDFSidebar{}
+        }
 
 }
