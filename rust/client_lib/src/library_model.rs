@@ -293,7 +293,7 @@ pub fn set_book_location(model_uuid: String, book_uuid: &str, location: &str, pe
 ///
 /// # Returns
 ///
-/// A `ReadPosition` struct containing the location and percentage read for the specified book.
+/// A `ReadPosition` struct containing the read location and percentage read for the specified book.
 ///
 /// # Example
 ///
@@ -307,6 +307,33 @@ pub fn get_book_location(model_uuid: String, book_uuid: &str) -> ReadPosition {
 	db_conn.get_book_location(book_uuid)
 }
 
+/// Creates a new directory with the specified path and parent folder ID, and returns a `Dir`
+/// struct representing the new directory.
+///
+/// # Arguments
+///
+/// * `path` - A reference to a `Path` struct representing the path to the new directory.
+/// * `folder_id` - A `u32` representing the ID of the parent folder of the new directory.
+///
+/// # Returns
+///
+/// A `Dir` struct representing the new directory.
+///
+/// # Panics
+///
+/// This function will panic if the `Path` struct passed in does not have a file name or if
+/// converting the file name to a string fails.
+///
+/// # Example
+///
+/// ```
+/// use std::path::Path;
+///
+/// let path = Path::new("/path/to/new/directory");
+/// let folder_id = 12345;
+/// let folder = create_folder(&path, folder_id);
+/// println!("Created directory '{}' with parent folder ID {} and ID {}.", folder.name, folder.parent_id, folder.id);
+/// ```
 pub fn create_folder(path: &Path, folder_id: u32) -> Dir {
 	let folder = Dir {
 		name: String::from(path.file_name().unwrap().to_str().unwrap()),
@@ -316,12 +343,22 @@ pub fn create_folder(path: &Path, folder_id: u32) -> Dir {
 	folder
 }
 
+/// Returns a vector of u32 values representing the supported widths for book cover thumbnails.
+///
+/// # Examples
+///
+/// ```
+/// let widths = get_cover_widths();
+/// assert_eq!(widths, vec![100, 150, 200, 250, 300]);
+/// ```
 pub fn get_cover_widths() -> Vec<u32> {
 	COVER_WIDTHS.to_vec()
 }
 
+/// C++ FFI bridge structs
 #[cxx::bridge]
 pub mod ffi {
+	/// Struct representing a book in the library.
 	#[derive(Default, Clone, Debug)]
 	pub struct Book {
 		pub uuid: String,
@@ -334,12 +371,14 @@ pub mod ffi {
 		pub folder_id: u32,
 	}
 
+	/// Struct representing a directory in the library.
 	pub struct Dir {
 		pub id: u32,
 		pub name: String,
 		pub parent_id: u32,
 	}
 
+	/// Struct representing the read location and percentage read for a book.
 	pub struct ReadPosition {
 		pub read_location: String,
 		pub read_percentage: u32,
