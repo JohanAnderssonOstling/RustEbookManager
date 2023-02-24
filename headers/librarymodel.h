@@ -4,10 +4,10 @@
 
 #ifndef RUSTEBOOKMANGER_LIBRARYMODEL_H
 #define RUSTEBOOKMANGER_LIBRARYMODEL_H
-#include <QAbstractListModel>
-#include <QStack>
+#include <qt6/QtCore/QAbstractListModel>
+#include <qt6/QtCore/QStack>
 #include "rust/cxx.h"
-#include "client_lib/src/library_model.rs.h"
+#include "cxx_layer/src/library_model_cxx.rs.h"
 
 
 class LibraryModel : public QAbstractListModel {
@@ -26,7 +26,7 @@ public:
 		UUIDRole = Qt::UserRole,
 		NameRole,
 		PathRole,
-		AuthorRole,
+		AuthRole,
 		LocationRole,
 		HasCoverRole,
 		CoverRole
@@ -46,7 +46,7 @@ public:
 	int getCoverWidth() const;
 
 public slots:
-	void openLibrary(QString uuid, QString path);
+	void openLibrary(QString library_uuid, QString library_path);
 	[[nodiscard]] QVariant bookData(int row, int role) const;
 	QVariant folderData(int row, int role) const;
 	void changeFolder(int folderID);

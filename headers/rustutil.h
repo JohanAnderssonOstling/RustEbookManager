@@ -5,7 +5,7 @@
 #ifndef RUSTEBOOKMANGER_RUSTUTIL_H
 #define RUSTEBOOKMANGER_RUSTUTIL_H
 
-#include <QString>
+#include <qt6/QtCore/QString>
 #include "rust/cxx.h"
 
 namespace RustUtil{

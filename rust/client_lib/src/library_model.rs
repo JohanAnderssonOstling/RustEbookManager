@@ -13,7 +13,6 @@ use library_db::LibraryDB;
 
 use crate::constant;
 use crate::db::library_db;
-use crate::library_model::ffi::*;
 use crate::parser::parse_book;
 
 pub const COVER_WIDTHS: [u32; 4] = [64, 128, 256, 512];
@@ -23,6 +22,30 @@ pub struct LibraryDBModel {
 	pub path: String,
 	pub db_conn: Mutex<LibraryDB>,
 }
+
+#[derive(Default, Clone, Debug)]
+pub struct Book {
+	pub uuid: String,
+	pub name: String,
+	pub path: String,
+	pub read_location: String,
+	pub read_percentage: u32,
+	pub title: String,
+	pub isbn: String,
+	pub folder_id: u32,
+}
+
+pub struct Dir {
+	pub id: u32,
+	pub name: String,
+	pub parent_id: u32,
+}
+
+pub struct ReadPosition {
+	pub read_location: String,
+	pub read_percentage: u32,
+}
+
 
 static mut LIBRARY_DB_CONNS: Lazy<HashMap<String, LibraryDBModel>> = Lazy::new(HashMap::new);
 
@@ -36,8 +59,6 @@ pub fn create_library(uuid: &str, path: &str) {
 }
 
 pub fn open_library(uuid: &str, path: &str) {
-	env::set_var("RUST_BACKTRACE", "1");
-	env::set_var("RUST_BACKTRACE", "full");
 	let library = LibraryDBModel {
 		uuid: String::from(uuid),
 		path: String::from(path),
@@ -49,7 +70,9 @@ pub fn open_library(uuid: &str, path: &str) {
 
 pub fn scan_library(model_uuid: String) {
 	let model = unsafe { LIBRARY_DB_CONNS.get(&*model_uuid).unwrap() };
-	thread::spawn(|| {scan_library_aux(model, &model.path, 0)});
+	thread::spawn(|| {
+		scan_library_aux(model, &model.path, 0)
+	});
 }
 
 
@@ -79,6 +102,7 @@ fn scan_library_aux(db_model: &LibraryDBModel, path: &String, parent_folder_id: 
 	//dirs.iter().map(|folder|
 	//	self.scan_library_aux(&*format!("{}/{}", path, folder.name), folder.id)).collect()
 }
+
 
 impl LibraryDBModel {
 	fn add_folder_contents_to_db(&self, folders: &Vec<Dir>, books: &Vec<Book>, parent_folder_id: u32) -> Vec<Dir> {
@@ -142,43 +166,4 @@ pub fn create_folder(path: &Path, folder_id: u32) -> Dir {
 
 pub fn get_cover_widths() -> Vec<u32> {
 	COVER_WIDTHS.to_vec()
-}
-
-#[cxx::bridge]
-pub mod ffi {
-	#[derive(Default, Clone, Debug)]
-	pub struct Book {
-		pub uuid: String,
-		pub name: String,
-		pub path: String,
-		pub read_location: String,
-		pub read_percentage: u32,
-		pub title: String,
-		pub isbn: String,
-		pub folder_id: u32,
-	}
-
-	pub struct Dir {
-		pub id: u32,
-		pub name: String,
-		pub parent_id: u32,
-	}
-
-	pub struct ReadPosition {
-		pub read_location: String,
-		pub read_percentage: u32,
-	}
-
-	extern "Rust" {
-		type LibraryDBModel;
-		fn open_library(uuid: &str, path: &str);
-		fn scan_library(model_uuid: String);
-		fn get_books(model_uuid: String, folder_id: u32) -> Vec<Book>;
-		fn get_folders(model_uuid: String, parent_id: u32) -> Vec<Dir>;
-		fn get_cover_path(model_uuid: String, book_uuid: &str) -> String;
-
-		fn set_book_location(model_uuid: String, book_uuid: &str, location: &str, percentage: u32);
-		fn get_book_location(model_uuid: String, book_uuid: &str) -> ReadPosition;
-		pub fn get_cover_widths() -> Vec<u32>;
-	}
 }

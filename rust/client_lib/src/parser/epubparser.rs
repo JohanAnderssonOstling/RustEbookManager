@@ -2,7 +2,7 @@ use std::fs;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use epub::doc::EpubDoc;
-use crate::library_model::ffi::Book;
+use crate::library_model::Book;
 use uuid::Uuid;
 pub fn parse_epub(book: Book, thumb_dir: &PathBuf) -> Book{
     let mut epub_book = book.clone();

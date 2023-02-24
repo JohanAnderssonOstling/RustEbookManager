@@ -1,11 +1,11 @@
 #ifndef HOMEMODEL_H
 #define HOMEMODEL_H
 
-#include <QAbstractListModel>
-#include <QHash>
-#include <QQmlApplicationEngine>
+#include <qt6/QtCore/QAbstractListModel>
+#include <qt6/QtCore/QHash>
+#include <qt6/QtQml/QQmlApplicationEngine>
 #include "rust/cxx.h"
-#include "client_lib/src/lib.rs.h"
+#include "cxx_layer/src/home_model_cxx.rs.h
 
 class HomeModel : public QAbstractListModel {
 	Q_OBJECT

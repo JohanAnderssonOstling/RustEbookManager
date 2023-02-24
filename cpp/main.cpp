@@ -4,8 +4,8 @@
 #include <QQmlContext>
 #include <QLocale>
 #include <QTranslator>
-#include "homemodel.h"
-#include "librarymodel.h"
+#include "headers/homemodel.h"
+#include "headers/librarymodel.h"
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);

@@ -1,9 +1,7 @@
 use std::{fs, thread};
 use std::path::PathBuf;
-use futures::executor::block_on;
-use futures::FutureExt;
 use uuid::Uuid;
-use crate::library_model::ffi::Book;
+use crate::library_model::Book;
 
 pub const COVER_WIDTHS: [u32; 4] = [64, 128, 256, 512];
 pub const MAX_HEIGHT_RATION: f32 = 1.6;
