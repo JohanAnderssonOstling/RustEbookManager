@@ -33,8 +33,6 @@ features = [
 ]
 
 
-[lib]
-crate-type=["staticlib"]
 
 # Unused crates
 #audiotags = "0.4.1"
