@@ -3,7 +3,7 @@ use std::io::Write;
 use std::path::PathBuf;
 use pdf::enc::StreamFilter;
 
-use crate::library_model::ffi::Book;
+use crate::library_model::Book;
 use pdf::error::PdfError;
 
 use pdf::file::File as PdfFile;

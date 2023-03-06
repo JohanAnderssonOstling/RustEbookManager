@@ -1,8 +1,8 @@
 #include <qdebug.h>
 #include <QQmlApplicationEngine>
-#include "homemodel.h"
-#include "librarymodel.h"
-#include "rustutil.h"
+#include "headers/homemodel.h"
+#include "headers/librarymodel.h"
+#include "headers/rustutil.h"
 
 
 HomeModel::HomeModel(QObject *parent, QQmlApplicationEngine *engine) : QAbstractListModel {parent} {

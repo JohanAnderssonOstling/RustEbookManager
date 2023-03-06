@@ -5,7 +5,8 @@ use std::fs;
 use uuid::Uuid;
 use rusqlite::{params, Connection};
 use crate::constant;
-use crate::ffi::*;
+use crate::home_model::Library;
+
 //use uuid::Uuid;
 
 pub(crate) struct HomeDb {

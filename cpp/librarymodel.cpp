@@ -1,100 +1,72 @@
-//
-// Created by johandost on 2/4/23.
-//
+#include "headers/librarymodel.h"
+#include "headers/rustutil.h"
 
-#include "librarymodel.h"
-#include "rustutil.h"
 using namespace RustUtil;
-LibraryModel::LibraryModel(QObject *parent) : QAbstractListModel(parent){
+using namespace std;
+
+LibraryModel::LibraryModel(QObject* parent):QAbstractListModel(parent) {
 	coverWidths = get_cover_widths();
 }
 
-int LibraryModel::rowCount(const QModelIndex &parent) const{
+int LibraryModel::rowCount(const QModelIndex& parent) const {
 	if (parent.isValid()) return 0;
-	return this->folderList.size() + this->bookList.size();
+	return folderList.size() + bookList.size();
 }
 
-QVariant LibraryModel::data(const QModelIndex &index, int role) const{
+QVariant LibraryModel::data(const QModelIndex& index, int role) const {
 	int row = index.row();
-	try{
-		if (row >= this->folderList.size()){
-			return bookData(row - this->folderList.size(), role);
-		} else{
-			return folderData(row, role);
-		}
-	} catch (std::out_of_range &e){
-		qInfo() << "Out of range, index is" << row << " and folder size is "
-				<< this->folderList.size() << " and book size is "
-				<< this->bookList.size();
-	}
-	return QVariant();
+	if (row>=this->folderList.size()) return bookData(row-this->folderList.size(), role);
+	else return folderData(row, role);
 }
 
-QString LibraryModel::getCoverPath(int row) const{
+QString LibraryModel::getCoverPath(int row) const {
 	rust::String uuid = get_cover_path(model_uuid, bookList.at(row).uuid);
-	QString path = asQString(uuid);
-	qInfo() << "Cover path is" << path;
-	return asQString(uuid) + "/" +
-		   QString::number(getCoverWidth()) + ".jpg";
+	return asQString(uuid) + "/" + QString::number(getCoverWidth()) + ".jpg";
 }
 
-QVariant LibraryModel::bookData(int row, int role) const{
+QVariant LibraryModel::bookData(int row, int role) const {
 	const Book book = bookList.at(row);
-	switch (role){
-		case UUIDRole:
-			return asQString(book.uuid);
-		case NameRole:
-			return asQString(book.name);
-		case PathRole:
-			return asQString(book.path);
-		case AuthorRole:
-			return "Placeholder";
-		case HasCoverRole:
-			return true;
-		case CoverRole:
-			return getCoverPath(row);
-		case LocationRole:
-			ReadPosition pos = get_book_location(model_uuid, book.uuid);
-
-			return asInt(pos.read_location);
-
+	switch (role) {
+	case UUIDRole: return asQString(book.uuid);
+	case NameRole: return asQString(book.name);
+	case PathRole: return asQString(book.path);
+	case AuthRole: return "Placeholder";
+	case CoverRole: return getCoverPath(row);
+	case HasCoverRole: return true;
+	case LocationRole: return asInt(get_book_location(model_uuid, book.uuid).read_location);
+	default: throw runtime_error("Undefined bookrole");
 	}
 }
 
-QVariant LibraryModel::folderData(int row, int role) const{
-	Dir dir = folderList.at(row);
-	switch (role){
-		case UUIDRole:
-			return dir.id;
-		case NameRole:
-			return asQString(dir.name);
-		case HasCoverRole:
-			return false;
-		default:
-			return {};
+QVariant LibraryModel::folderData(int row, int role) const {
+	const Dir dir = folderList.at(row);
+	switch (role) {
+	case UUIDRole: return dir.id;
+	case NameRole: return asQString(dir.name);
+	case HasCoverRole: return false;
+	default: throw runtime_error("Undefined dirrole");
 	}
 }
 
-QHash<int, QByteArray> LibraryModel::roleNames() const{
-	static QHash<int, QByteArray> mapping{
-			{UUIDRole,     "uuid"},
-			{NameRole,     "name"},
-			{PathRole,     "path"},
-			{LocationRole, "location"},
-			{HasCoverRole, "hasCover"},
-			{CoverRole,    "cover"},
-			{AuthorRole,   "author"}
+QHash<int, QByteArray> LibraryModel::roleNames() const {
+	return {
+		{ UUIDRole, "uuid" },
+		{ NameRole, "name" },
+		{ PathRole, "path" },
+		{ LocationRole, "location" },
+		{ HasCoverRole, "hasCover" },
+		{ CoverRole, "cover" },
+		{ AuthRole, "author" }
 	};
-	return mapping;
 }
 
-void LibraryModel::openLibrary(QString uuid, QString path){
-	this->model_uuid = asRustString(uuid);
-	open_library(model_uuid, asRustString(path));
+void LibraryModel::openLibrary(QString library_uuid, QString library_path) {
+	this->model_uuid = asRustString(library_uuid);
+	open_library(model_uuid, asRustString(library_path));
 	this->changeFolder(0);
 }
 
-void LibraryModel::changeFolder(int folderID){
+void LibraryModel::changeFolder(int folderID) {
 	beginResetModel();
 	this->folderList = get_folders(model_uuid, folderID);
 	this->bookList = get_books(model_uuid, folderID);
@@ -102,28 +74,26 @@ void LibraryModel::changeFolder(int folderID){
 	navStack.push(folderID);
 }
 
-bool LibraryModel::prevFolder(){
-	if (navStack.size() == 1) return false;
+bool LibraryModel::prevFolder() {
+	if (navStack.size()==1) return false;
 	navStack.pop();
 	changeFolder(navStack.pop());
 	return true;
 }
 
-bool LibraryModel::isFolder(int index){
-	return index < folderList.size();
+bool LibraryModel::isFolder(int index) {
+	return index<folderList.size();
 }
 
-void LibraryModel::setCoverWidthIndex(int coverWidthIndex){
-	if (coverWidthIndex < 0 || coverWidthIndex >= coverWidths.size()) return;
+void LibraryModel::setCoverWidthIndex(int coverWidthIndex) {
+	if (coverWidthIndex<0 || coverWidthIndex>=coverWidths.size()) return;
 	emit coverWidthChanged();
 }
 
-int LibraryModel::getCoverWidth() const{
+int LibraryModel::getCoverWidth() const {
 	return coverWidths.at(coverWidthIndex);
 }
 
-void LibraryModel::	setBookLocation(const QString& bookUUID, const QString& location, int percentage){
-	set_book_location(model_uuid,
-					  asRustString(bookUUID),
-					  asRustString(location), 0);
+void LibraryModel::setBookLocation(const QString& bookUUID, const QString& location, int percentage) {
+	set_book_location(model_uuid, asRustString(bookUUID), asRustString(location), 0);
 }

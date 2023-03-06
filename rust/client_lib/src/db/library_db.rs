@@ -2,8 +2,8 @@ use std::fs;
 use rusqlite::*;
 use crate::{constant, library_model};
 use std::path::PathBuf;
-use library_model::ffi;
-use crate::library_model::ffi::*;
+use crate::library_model::{Book, Dir, ReadPosition};
+
 
 pub struct LibraryDB {
 	connection: rusqlite::Connection,
