@@ -1,7 +1,8 @@
-use crate::library_model_cxx::ffi::*;
+use epub::doc::EpubDoc;
+
+use crate::library_model_cxx::ffi::{Book, Dir, ReadPosition};
 
 pub fn open_library(uuid: &str, path: &str) {
-
 }
 
 pub fn scan_library(model_uuid: String) {
@@ -18,13 +19,12 @@ pub fn get_cover_path(model_uuid: String, book_uuid: &str) -> String {
 }
 
 pub fn set_book_location(model_uuid: String, book_uuid: &str, location: &str, percentage: u32) {
-
 }
 
 pub fn get_book_location(model_uuid: String, book_uuid: &str) -> ReadPosition {
-	ReadPosition{
-		location: String::from(""),
-		percentage: 0,
+	ReadPosition {
+		read_location: String::from(""),
+		read_percentage: 0,
 	}
 }
 
@@ -35,17 +35,26 @@ pub fn get_cover_widths() -> Vec<u32> {
 
 #[cxx::bridge]
 pub mod ffi {
-	pub struct Book{
-		uuid: String,
-		title: String,
+	pub struct Book {
+		pub uuid: String,
+		pub name: String,
+		pub path: String,
+		pub read_location: String,
+		pub read_percentage: u32,
+		pub title: String,
+		pub isbn: String,
+		pub folder_id: u32,
 	}
-	pub struct Dir{
-		uuid: String,
-		name: String,
+
+	pub struct Dir {
+		pub id: u32,
+		pub name: String,
+		pub parent_id: u32,
 	}
-	pub struct ReadPosition{
-		pub(crate) location: String,
-		pub(crate) percentage: u32,
+
+	pub struct ReadPosition {
+		pub read_location: String,
+		pub read_percentage: u32,
 	}
 
 	extern "Rust" {

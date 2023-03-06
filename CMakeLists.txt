@@ -33,7 +33,7 @@ file(GLOB_RECURSE cpp ${CMAKE_SOURCE_DIR}/cpp*.cpp)
 file(GLOB_RECURSE headers ${CMAKE_SOURCE_DIR}/headers/*.h)
 file(GLOB_RECURSE qml ${CMAKE_SOURCE_DIR}/qml/*.qml)
 
-qt_add_executable(EbookTest ${cpp} ${headers} ${qml} cpp/librarymodel.cpp)
+qt_add_executable(EbookTest ${cpp} ${headers} ${qml} cpp/librarymodel.cpp cpp/rustutil.cpp cpp/homemodel.cpp cpp/main.cpp)
 
 option(WASM "Build for WASM" OFF)
 if (WASM)

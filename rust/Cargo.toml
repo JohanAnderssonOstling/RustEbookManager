@@ -3,5 +3,5 @@
 members = [
     "client_lib",
     "cxx_layer",
-    "wasm_layer",
+   # "wasm_layer",
 ]

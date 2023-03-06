@@ -1,0 +1,12 @@
+[package]
+name = "cxx_layer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cxx = "1.0"
+client_lib = { path = "../client_lib"}
+epub = "2.0.0"
+
+[build-dependencies]
+cxx-build = "1.0"

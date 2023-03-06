@@ -1,4 +1,4 @@
-extern crate core;
+
 #[allow(dead_code)]
 #[allow(warnings)]
 #[allow(unused_imports)]
@@ -6,7 +6,7 @@ extern crate core;
 #[allow(unused_mut)]
 #[allow(unused_assignments)]
 #[allow(unused_parens)]
-mod db;
+pub mod db;
 pub mod constant;
 pub mod library_model;
 pub mod parser;

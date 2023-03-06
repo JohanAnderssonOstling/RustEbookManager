@@ -41,7 +41,6 @@ Window {
 		Layout.fillHeight: true
 		focus: true
 		HomeView{id: homeView}
-		EpubReader{id: epubReader}
 		initialItem: homeView
 		}
 

@@ -2,6 +2,7 @@ use crate::home_model_cxx::ffi::*;
 
 pub fn add_library(name: &str, path: &str) -> Library {
 	Library {
+		name: String::from(name),
 		uuid: String::from(""),
 		path: String::from(""),
 	}
@@ -16,8 +17,9 @@ pub fn delete_library(library_uuid: &str) {
 mod ffi {
 
 	pub struct Library {
-		pub(crate) uuid: String,
-		pub(crate) path: String,
+		pub uuid: String,
+		pub name: String,
+		pub path: String,
 	}
 	extern "Rust" {
 		fn add_library(name: &str, path: &str) -> Library;

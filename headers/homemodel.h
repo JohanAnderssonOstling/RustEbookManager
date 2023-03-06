@@ -5,7 +5,7 @@
 #include <qt6/QtCore/QHash>
 #include <qt6/QtQml/QQmlApplicationEngine>
 #include "rust/cxx.h"
-#include "cxx_layer/src/home_model_cxx.rs.h
+#include "cxx_layer/src/home_model_cxx.rs.h"
 
 class HomeModel : public QAbstractListModel {
 	Q_OBJECT
